@@ -1,3 +1,3 @@
 <template>
-  <v-container fluid>dashboard</v-container>
+  <v-container class="ma-0 pa-0" fluid>dashboard</v-container>
 </template>
