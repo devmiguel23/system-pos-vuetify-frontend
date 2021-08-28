@@ -1,22 +1,45 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+
 
 Vue.use(VueRouter)
 
 const routes = [
+  //Init Router
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: { name: 'Dashboard' }
   },
+  //Errors
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '*',
+    name: 'Error',
+    component: () => import('@/errors/Error_404.vue'),
+    meta: {
+      title: 'Pagina no encontrada',
+      requiresAuth: false
+    },
+  },
+  //dashboard
+  {
+    path: '/dashboard',
+    name: "Dashboard",
+    component: () => import('@/views/home/Dashboard.vue'),
+    redirect: { name: 'Dashboard-Product' },
+    meta: {
+      requiresAuth: true
+    },
+    children: [
+      {
+        path: '/dashboard/product',
+        name: 'Dashboard-Product',
+        component: () => import('@/views/home/Product.vue'),
+        meta: {
+          title: 'Productos',
+          requiresAuth: true
+        },
+      },
+    ]
   }
 ]
 
@@ -25,5 +48,8 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
+router.beforeEach(async (to, from, next) => {
+  if (to.meta.title) window.document.title = to.meta && to.meta.title ? `AUTO REPUESTOS - ${to.meta.title}` : 'AUTO REPUESTOS';
+  next();
+})
 export default router
