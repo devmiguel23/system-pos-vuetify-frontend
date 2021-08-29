@@ -6,7 +6,7 @@
       <p class="mt-4 text-lowercase title font-weight-regular">
         No pudimos encontrar la página que estás buscando.
       </p>
-      <v-btn color="secondary" to="/dashboard">Volver</v-btn>
+      <v-btn color="tertiary white--text" to="/dashboard">Volver</v-btn>
     </v-flex>
   </v-layout>
 </template>
