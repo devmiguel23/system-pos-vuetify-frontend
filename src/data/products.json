@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "barCode": 10000001,
+        "description": "FILTRO AIRE",
+        "referenceLarge": "HONDA-CRV-2012",
+        "referenceSmall": "CRV-12",
+        "buy": "LFA.SS",
+        "sale": "LFA.SS",
+        "stock": 4,
+        "existence": 10
+    },
+    {
+        "id": 2,
+        "barCode": 10000002,
+        "description": "FILTRO ACEITE",
+        "referenceLarge": "HONDA-CRV-2012",
+        "referenceSmall": "CRV-12",
+        "buy": "LFA.SS",
+        "sale": "LFA.SS",
+        "stock": 4,
+        "existence": 10
+    },
+    {
+        "id": 3,
+        "barCode": 10000003,
+        "description": "ACEITE MOTUL",
+        "referenceLarge": "SAE-25-50",
+        "referenceSmall": "SAE-25-50",
+        "buy": "LFA.SS",
+        "sale": "LFA.SS",
+        "stock": 10,
+        "existence": 50
+    }
+]

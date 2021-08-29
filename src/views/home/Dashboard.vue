@@ -31,20 +31,23 @@
         </div>
       </v-list-item>
       <v-divider></v-divider>
-      <v-list class="py-1">
+      <v-list class="py-1" dense>
         <template v-for="(item, i) in items">
           <v-list-group
+            mandatory
             active-class="primary white--text"
             v-if="item.children"
             :key="i"
-            :prepend-icon="item.iconCtr"
             :append-icon="item.model == true ? item.iconUp : item.iconDown"
           >
+            <!-- :prepend-icon="item.iconCtr" -->
+
+            <template v-slot:prependIcon>
+              <v-icon class="my-0" v-text="item.iconCtr"></v-icon>
+            </template>
             <template v-slot:activator>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ item.text }}
-                </v-list-item-title>
+              <v-list-item-content class="py-0">
+                <v-list-item-title v-text="item.text"> </v-list-item-title>
               </v-list-item-content>
             </template>
 
@@ -53,15 +56,12 @@
               v-for="(child, i) in item.children"
               :key="i"
               :to="child.route"
-              dense
             >
-              <v-list-item-action class="my-0 mr-6" v-if="child.icon">
-                <v-icon>{{ child.icon }}</v-icon>
+              <v-list-item-action class="my-0 mr-0" v-if="child.icon">
+                <v-icon x-small>{{ child.icon }}</v-icon>
               </v-list-item-action>
               <v-list-item-content class="py-0">
-                <v-list-item-title>
-                  {{ child.text }}
-                </v-list-item-title>
+                <v-list-item-title v-text="child.text"> </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-group>
@@ -71,38 +71,52 @@
             :key="i"
             exact-path
             :to="item.route"
-            dense
           >
-            <v-list-item-action class="my-0 mr-6">
-              <v-icon>{{ item.icon }}</v-icon>
+            <v-list-item-action class="my-0">
+              <v-icon v-text="item.icon"></v-icon>
             </v-list-item-action>
             <v-list-item-content class="py-0">
-              <v-list-item-title>
-                {{ item.text }}
-              </v-list-item-title>
+              <v-list-item-title v-text="item.text"> </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </template>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar elevation="3" color="primary" dense app>
+    <v-app-bar elevation="2" color="primary" dense app>
       <v-app-bar-nav-icon
         class="white--text"
         @click="mini = !mini"
       ></v-app-bar-nav-icon>
+      <v-spacer></v-spacer>
+      <v-toolbar dense elevation="0" color="primary" dark fixed>
+        <v-text-field
+          flat
+          solo-inverted
+          hide-details
+          prepend-inner-icon="mdi-magnify"
+          label="Buscar"
+          class="hidden-sm-and-down font-weight-light"
+          dense
+        ></v-text-field>
+      </v-toolbar>
+
+      <v-spacer></v-spacer>
     </v-app-bar>
     <v-main class="scroll-y">
-      <v-card elevation="2">
+      <v-card elevation="4" class="ma-2">
         <div class="mx-4 d-flex justify-start align-center">
-          <h2>REMICON S.R.L</h2>
-          <v-divider vertical class="mx-3 my-2"></v-divider>
+          <h3>DASHBOARD</h3>
+          <v-divider vertical class="mx-2"></v-divider>
           <v-breadcrumbs
-            class="font-weight-bold"
+            class="pa-2 font-weight-bold"
             :items="breadcrumbs"
-            divider="-"
+            divider="/"
           ></v-breadcrumbs>
         </div>
       </v-card>
+      <v-container fluid>
+        <router-view />
+      </v-container>
     </v-main>
     <v-btn
       small
@@ -124,6 +138,13 @@ export default {
   name: "Dashboard",
   data: () => ({
     mini: false,
+    breadcrumbs: [
+      {
+        text: "Productos",
+        disabled: true,
+        href: "breadcrumbs_dashboard",
+      },
+    ],
     items: [
       {
         icon: "mdi-view-dashboard",
@@ -131,9 +152,23 @@ export default {
         route: "/dashboard/home",
       },
       {
-        icon: "mdi-view-dashboard",
-        text: "Productos",
-        route: "/dashboard/product",
+        iconUp: "mdi-chevron-up",
+        iconDown: "mdi-chevron-down",
+        iconCtr: "mdi-warehouse",
+        text: "Almacen",
+        model: false,
+        children: [
+          {
+            icon: "mdi-circle",
+            text: "Productos",
+            route: "/dashboard/product",
+          },
+          {
+            icon: "mdi-circle",
+            text: "Agregar Entradas",
+            route: "/dashboard/addproducts",
+          },
+        ],
       },
     ],
   }),

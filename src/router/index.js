@@ -39,6 +39,15 @@ const routes = [
           requiresAuth: true
         },
       },
+      {
+        path: '/dashboard/addproducts',
+        name: 'Dashboard-AddProduct',
+        component: () => import('@/views/home/AddProduct.vue'),
+        meta: {
+          title: 'Entradas al Almacen',
+          requiresAuth: true
+        },
+      },
     ]
   }
 ]
