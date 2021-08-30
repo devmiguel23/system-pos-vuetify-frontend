@@ -132,9 +132,28 @@
                 </v-card-text>
               </v-card>
             </v-dialog>
-            <v-dialog persistent v-model="dialogDelete" max-width="600px">
+            <v-dialog
+              @keydown.esc="closeDelete"
+              @keydown.enter="deleteItemConfirm"
+              persistent
+              v-model="dialogDelete"
+              max-width="600px"
+            >
               <v-card>
-                <v-card-title class="text-h5"
+                <v-toolbar dark color="primary">
+                  <v-btn icon dark @click="closeDelete">
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                  <v-toolbar-title
+                    >Seguro que desea deshabilitar este
+                    registro?</v-toolbar-title
+                  >
+                  <v-spacer></v-spacer>
+                  <v-toolbar-items>
+                    <v-btn dark text @click="deleteItemConfirm"> Save </v-btn>
+                  </v-toolbar-items>
+                </v-toolbar>
+                <!-- <v-card-title class="text-h5"
                   >Seguro que desea deshabilitar este registro?</v-card-title
                 >
                 <v-card-actions>
@@ -146,7 +165,7 @@
                     >OK</v-btn
                   >
                   <v-spacer></v-spacer>
-                </v-card-actions>
+                </v-card-actions> -->
               </v-card>
             </v-dialog>
           </v-toolbar>
