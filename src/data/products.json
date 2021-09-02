@@ -7,8 +7,8 @@
         "referenceSmall": "CRV-12",
         "buy": "LFA.SS",
         "sale": "LFA.SS",
-        "stock": 4,
-        "existence": 10
+        "stock": 4.00,
+        "existence": 10.00
     },
     {
         "id": 2,
@@ -18,8 +18,8 @@
         "referenceSmall": "CRV-12",
         "buy": "LFA.SS",
         "sale": "LFA.SS",
-        "stock": 4,
-        "existence": 10
+        "stock": 4.00,
+        "existence": 10.00
     },
     {
         "id": 3,
@@ -29,7 +29,7 @@
         "referenceSmall": "SAE-25-50",
         "buy": "LFA.SS",
         "sale": "LFA.SS",
-        "stock": 10,
-        "existence": 50
+        "stock": 10.00,
+        "existence": 50.00
     }
 ]

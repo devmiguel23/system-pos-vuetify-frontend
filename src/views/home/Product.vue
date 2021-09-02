@@ -63,21 +63,35 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                      <v-col cols="12" sm="2" md="2" lg="2" xl="2">
+                        <label class="font-weight-bold" for=""
+                          >Generar Codigo
+                        </label>
+                        <div class="d-flex align-end justify-center">
+                          <v-btn
+                            @click="generateBarCode"
+                            color="tertiary white--text"
+                            small
+                            >Generar</v-btn
+                          >
+                        </div>
+                      </v-col>
+                      <v-col cols="12" sm="2" md="2" lg="2" xl="2">
                         <label class="font-weight-bold" for=""
                           >Codigo Barra
                           <span class="error--text">*</span></label
                         >
                         <v-text-field
+                          :disabled="inputBarCode"
                           solo
                           required
                           v-model.trim="editedItem.barCode"
                           hide-details
-                          label="Codigo de Barra"
+                          label="#*****"
                           type="text"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" sm="6" md="6" lg="6" xl="6">
+                      <v-col cols="12" sm="8" md="8" lg="8" xl="8">
                         <label class="font-weight-bold" for=""
                           >Descripción <span class="error--text">*</span></label
                         >
@@ -215,10 +229,12 @@
         <template v-slot:no-results> Lo que esta buscando no aparece </template>
       </v-data-table>
     </v-card>
+    <svg id="barcode"></svg>
   </v-container>
 </template>
 <script>
 import products from "@/data/products.json";
+// import JsBarcode from "jsbarcode";
 export default {
   name: "Dashboard-Product",
   data: () => ({
@@ -239,6 +255,7 @@ export default {
       { text: "Existencia", value: "existence" },
       { text: "Opciones", align: "end", value: "options", sortable: false },
     ],
+    inputBarCode: false,
     products: null,
     dialog: false,
     dialogDelete: false,
@@ -273,10 +290,24 @@ export default {
       val || this.closeDelete();
     },
   },
+  mounted() {
+    // JsBarcode("#barcode")
+    //   .EAN13("123456789012", {
+    //     height: 50,
+    //     fontSize: 16,
+    //   })
+    //   .render();
+  },
   created() {
     this.getProducts();
   },
+
   methods: {
+    generateBarCode() {
+      this.inputBarCode = true;
+      this.editedItem.barCode =
+        Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
+    },
     editItem(item) {
       this.editedIndex = this.products.indexOf(item);
       this.editedItem = Object.assign({}, item);
@@ -296,6 +327,7 @@ export default {
 
     close() {
       this.dialog = false;
+      this.inputBarCode = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
