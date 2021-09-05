@@ -14,7 +14,7 @@ Vue.config.productionTip = false
 axios.defaults.baseURL = "http://localhost:4000/api"
 axios.defaults.headers = {
   'Content-Type': 'application/json',
-  'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzI1ODE3NzE5NzZhMTVhMGE4ZmYyZiIsImVtYWlsIjoibWRlc2Fycm9sbGFkb3IyM0BnbWFpbC5jb20iLCJpYXQiOjE2MzA2ODkzMDUsImV4cCI6MTYzMDc3NTcwNX0.j94Ft2LqAY7ocotRO4sPAcJogf_LpVTQQ22lF0ZxyvI'
+  'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzQ2MDljYjlhZTQ0MTg3YzhjMDFkZiIsImVtYWlsIjoibWRlc2Fycm9sbGFkb3IyM0BnbWFpbC5jb20iLCJjbGFpbXMiOlsyNTUsMjU0LDI1MywyNTJdLCJpYXQiOjE2MzA4Mjc2MTYsImV4cCI6MTYzMDkxNDAxNn0.0oD3SL_ABWLY_Ma9M1XVBzhgWWcM6my8HaaipUdymmk'
 }
 
 Vue.use(VueAxios, axios)

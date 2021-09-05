@@ -13,11 +13,11 @@
         loading-text="Por favor... espere un momento."
         class="elevation-1"
         dense
-        :items-per-page="50"
+        :items-per-page="20"
         :footer-props="{
           itemsPerPageAllText: 'Todo',
           itemsPerPageText: 'Filas por página',
-          itemsPerPageOptions: [10, 50, 100, -1],
+          itemsPerPageOptions: [10, 20, 50, 100, -1],
           pageText: '{0}-{1} de {2}',
         }"
       >
@@ -263,6 +263,7 @@
   </v-container>
 </template>
 <script>
+import moment from "moment";
 import { validationMixin } from "vuelidate";
 import {
   required,
@@ -381,6 +382,9 @@ export default {
     },
 
     close() {
+      this.$v.$reset();
+      this.btnLoading = false;
+      this.tableLoading = false;
       this.dialog = false;
       this.inputBarCode = false;
       this.$nextTick(() => {
@@ -390,6 +394,8 @@ export default {
     },
 
     closeDelete() {
+      this.tableLoading = false;
+      this.btnDLoading = false;
       this.dialogDelete = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
@@ -407,7 +413,18 @@ export default {
       await this.axios
         .get("/product")
         .then((res) => {
-          this.products = res.data;
+          if (!res.data[1].permission) {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: res.data.msg,
+            });
+          } else {
+            res.data[0].forEach((e) => {
+              e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
+              this.products.push(e);
+            });
+          }
           this.tableLoading = false;
         })
         .catch((err) => {
@@ -419,16 +436,25 @@ export default {
         });
     },
     async createProduct(data) {
+      this.tableLoading = true;
       this.btnLoading = true;
       this.$v.$touch();
       if (!this.$v.$invalid) {
         await this.axios
           .post("/product", data)
           .then((res) => {
-            this.products.push(res.data.item);
-            this.$v.$reset();
-            this.btnLoading = false;
-            this.$swal("Buen Trabajo!", "El producto fue creado!", "success");
+            if (!res.data[1].permission) {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: res.data.msg,
+              });
+            } else {
+              res.data[0].forEach((e) => {
+                e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
+                this.products.push(e);
+              });
+            }
             this.close();
           })
           .catch((err) => {
@@ -441,12 +467,22 @@ export default {
       }
     },
     async updateProduct(data) {
+      this.tableLoading = true;
+      this.btnLoading = true;
       this.$v.$touch();
       if (!this.$v.$invalid) {
         await this.axios
           .put(`/product/${data._id}`, data)
           .then((res) => {
-            Object.assign(this.products[this.editedIndex], res.data.item);
+            if (!res.data.permission) {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: res.data.msg,
+              });
+            } else {
+              Object.assign(this.products[this.editedIndex], res.data.item);
+            }
             this.close();
           })
           .catch((err) => {
@@ -463,12 +499,17 @@ export default {
       this.btnDLoading = true;
       await this.axios
         .delete(`/product/${data._id}`)
-        .then(() => {
-          this.products.splice(this.editedIndex, 1);
+        .then((res) => {
+          if (!res.data.permission) {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: res.data.msg,
+            });
+          } else {
+            this.products.splice(this.editedIndex, 1);
+          }
           this.closeDelete();
-          this.tableLoading = false;
-          this.btnDLoading = false;
-          this.$swal("Buen Trabajo!", "El producto fue borrado!", "success");
         })
         .catch((err) => {
           this.$swal({
