@@ -154,6 +154,25 @@ export default {
       {
         iconUp: "mdi-chevron-up",
         iconDown: "mdi-chevron-down",
+        iconCtr: "mdi-shield-account",
+        text: "Usuarios",
+        model: false,
+        children: [
+          {
+            icon: "mdi-circle",
+            text: "Ver Usuarios",
+            route: "/dashboard/users",
+          },
+          {
+            icon: "mdi-circle",
+            text: "Permisos",
+            route: "/dashboard/permission",
+          },
+        ],
+      },
+      {
+        iconUp: "mdi-chevron-up",
+        iconDown: "mdi-chevron-down",
         iconCtr: "mdi-warehouse",
         text: "Almacen",
         model: false,

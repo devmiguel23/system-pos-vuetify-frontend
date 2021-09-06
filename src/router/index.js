@@ -31,6 +31,24 @@ const routes = [
     },
     children: [
       {
+        path: '/dashboard/users',
+        name: 'Dashboard-Users',
+        component: () => import('@/views/home/Users.vue'),
+        meta: {
+          title: 'Usuarios',
+          requiresAuth: true
+        },
+      },
+      {
+        path: '/dashboard/permission',
+        name: 'Dashboard-Permission',
+        component: () => import('@/views/home/Permission.vue'),
+        meta: {
+          title: 'Permisos',
+          requiresAuth: true
+        },
+      },
+      {
         path: '/dashboard/product',
         name: 'Dashboard-Product',
         component: () => import('@/views/home/Product.vue'),

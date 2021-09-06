@@ -259,7 +259,6 @@
         <template v-slot:no-results> Lo que esta buscando no aparece </template>
       </v-data-table>
     </v-card>
-    <svg id="barcode"></svg>
   </v-container>
 </template>
 <script>
