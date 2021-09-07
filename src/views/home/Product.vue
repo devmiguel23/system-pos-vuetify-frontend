@@ -78,7 +78,7 @@
                         md="2"
                         lg="2"
                         xl="2"
-                        v-if="editedIndex < 1"
+                        v-if="editedIndex === -1"
                       >
                         <label class="font-weight-bold" for=""
                           >Generar Codigo
@@ -98,7 +98,7 @@
                         md="2"
                         lg="2"
                         xl="2"
-                        v-if="editedIndex < 1"
+                        v-if="editedIndex === -1"
                       >
                         <label class="font-weight-bold" for=""
                           >Codigo Barra
@@ -139,7 +139,6 @@
                         >
                         <v-text-field
                           solo
-                          required
                           v-model="editedItem.referencelarge"
                           :hide-details="
                             hideDetails(referencelargeErrors.length)
@@ -157,7 +156,6 @@
                         >
                         <v-text-field
                           solo
-                          required
                           v-model="editedItem.referencesmall"
                           :hide-details="
                             hideDetails(referencesmallErrors.length)
@@ -173,7 +171,6 @@
                         <label class="font-weight-bold" for="">Stock</label>
                         <v-text-field
                           solo
-                          required
                           v-model="editedItem.stock"
                           :hide-details="hideDetails(stockErrors.length)"
                           :error-messages="stockErrors"

@@ -40,15 +40,6 @@ const routes = [
         },
       },
       {
-        path: '/dashboard/permission',
-        name: 'Dashboard-Permission',
-        component: () => import('@/views/home/Permission.vue'),
-        meta: {
-          title: 'Permisos',
-          requiresAuth: true
-        },
-      },
-      {
         path: '/dashboard/product',
         name: 'Dashboard-Product',
         component: () => import('@/views/home/Product.vue'),

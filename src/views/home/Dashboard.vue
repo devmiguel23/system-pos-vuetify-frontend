@@ -27,7 +27,7 @@
           <v-list-item-title class="text-capitalize font-weight-medium"
             >Miguel De Jesus</v-list-item-title
           >
-          <v-list-item-subtitle>Administrador</v-list-item-subtitle>
+          <v-list-item-subtitle>hdjhaker</v-list-item-subtitle>
         </div>
       </v-list-item>
       <v-divider></v-divider>
@@ -152,24 +152,29 @@ export default {
         route: "/dashboard/home",
       },
       {
-        iconUp: "mdi-chevron-up",
-        iconDown: "mdi-chevron-down",
-        iconCtr: "mdi-shield-account",
+        icon: "mdi-shield-account",
         text: "Usuarios",
-        model: false,
-        children: [
-          {
-            icon: "mdi-circle",
-            text: "Ver Usuarios",
-            route: "/dashboard/users",
-          },
-          {
-            icon: "mdi-circle",
-            text: "Permisos",
-            route: "/dashboard/permission",
-          },
-        ],
+        route: "/dashboard/users",
       },
+      // {
+      //   iconUp: "mdi-chevron-up",
+      //   iconDown: "mdi-chevron-down",
+      //   iconCtr: "mdi-shield-account",
+      //   text: "Usuarios",
+      //   model: false,
+      //   children: [
+      //     {
+      //       icon: "mdi-circle",
+      //       text: "Ver Usuarios",
+      //       route: "/dashboard/users",
+      //     },
+      //     // {
+      //     //   icon: "mdi-circle",
+      //     //   text: "Permisos",
+      //     //   route: "/dashboard/permission",
+      //     // },
+      //   ],
+      // },
       {
         iconUp: "mdi-chevron-up",
         iconDown: "mdi-chevron-down",
