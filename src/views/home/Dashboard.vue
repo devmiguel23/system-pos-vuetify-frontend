@@ -165,6 +165,16 @@ export default {
         text: "Clientes",
         route: "/dashboard/client",
       },
+      {
+        icon: "mdi-store",
+        text: "Productos",
+        route: "/dashboard/product",
+      },
+      {
+        icon: "mdi-table-star",
+        text: "Categorias",
+        route: "/dashboard/categories",
+      },
       // {
       //   iconUp: "mdi-chevron-up",
       //   iconDown: "mdi-chevron-down",
@@ -184,30 +194,30 @@ export default {
       //     // },
       //   ],
       // },
-      {
-        iconUp: "mdi-chevron-up",
-        iconDown: "mdi-chevron-down",
-        iconCtr: "mdi-warehouse",
-        text: "Almacen",
-        model: false,
-        children: [
-          {
-            icon: "mdi-store",
-            text: "Productos",
-            route: "/dashboard/product",
-          },
-          {
-            icon: "mdi-table-star",
-            text: "Categorias",
-            route: "/dashboard/categories",
-          },
-          // {
-          //   icon: "",
-          //   text: "Agregar Entradas",
-          //   route: "/dashboard/addproducts",
-          // },
-        ],
-      },
+      // {
+      //   iconUp: "mdi-chevron-up",
+      //   iconDown: "mdi-chevron-down",
+      //   iconCtr: "mdi-warehouse",
+      //   text: "Almacen",
+      //   model: false,
+      //   children: [
+      //     {
+      //       icon: "mdi-store",
+      //       text: "Productos",
+      //       route: "/dashboard/product",
+      //     },
+      //     {
+      //       icon: "mdi-table-star",
+      //       text: "Categorias",
+      //       route: "/dashboard/categories",
+      //     },
+      //     // {
+      //     //   icon: "",
+      //     //   text: "Agregar Entradas",
+      //     //   route: "/dashboard/addproducts",
+      //     // },
+      //   ],
+      // },
     ],
   }),
   methods: {

@@ -49,11 +49,29 @@ const routes = [
         },
       },
       {
+        path: '/dashboard/client',
+        name: 'Dashboard-Client',
+        component: () => import('@/views/home/Client.vue'),
+        meta: {
+          title: 'Clientes',
+          requiresAuth: true
+        },
+      },
+      {
         path: '/dashboard/product',
         name: 'Dashboard-Product',
         component: () => import('@/views/home/Product.vue'),
         meta: {
           title: 'Productos',
+          requiresAuth: true
+        },
+      },
+      {
+        path: '/dashboard/categories',
+        name: 'Dashboard-Categories',
+        component: () => import('@/views/home/Categories.vue'),
+        meta: {
+          title: 'Categorias',
           requiresAuth: true
         },
       },
