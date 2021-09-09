@@ -3,9 +3,9 @@
     <v-card>
       <v-data-table
         :headers="headers"
-        :items="products"
+        :items="providers"
         item-key="id"
-        :sort-by="['description']"
+        :sort-by="['namecompany']"
         :sort-desc="[false, true]"
         multi-sort
         :search="search"
@@ -23,7 +23,7 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>Productos</v-toolbar-title>
+            <v-toolbar-title>Proveedores</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
             <v-dialog
@@ -46,7 +46,7 @@
                     dense
                   ></v-text-field>
                   <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                    Nuevo Producto
+                    Nuevo Proveedor
                   </v-btn>
                 </div>
               </template>
@@ -72,112 +72,114 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <v-col
-                        cols="12"
-                        sm="2"
-                        md="2"
-                        lg="2"
-                        xl="2"
-                        v-if="editedIndex === -1"
-                      >
+                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                         <label class="font-weight-bold" for=""
-                          >Generar Codigo
-                        </label>
-                        <div class="d-flex align-end justify-center">
-                          <v-btn
-                            @click="generateBarCode"
-                            color="tertiary white--text"
-                            small
-                            >Generar</v-btn
-                          >
-                        </div>
-                      </v-col>
-                      <v-col
-                        cols="12"
-                        sm="2"
-                        md="2"
-                        lg="2"
-                        xl="2"
-                        v-if="editedIndex === -1"
-                      >
-                        <label class="font-weight-bold" for=""
-                          >Codigo Barra
-                          <span class="error--text">*</span></label
+                          >Nombre <span class="error--text">*</span></label
                         >
                         <v-text-field
-                          :disabled="inputBarCode"
                           solo
                           required
-                          v-model="editedItem.barcode"
-                          :hide-details="hideDetails(barcodeErrors.length)"
-                          :error-messages="barcodeErrors"
-                          @input="$v.editedItem.barcode.$touch()"
-                          @blur="$v.editedItem.barcode.$touch()"
-                          label="#*****"
-                          type="number"
+                          v-model="editedItem.namecompany"
+                          :hide-details="hideDetails(namecompanyErrors.length)"
+                          :error-messages="namecompanyErrors"
+                          @input="$v.editedItem.namecompany.$touch()"
+                          @blur="$v.editedItem.namecompany.$touch()"
+                          label="Nombre Empresa"
+                          type="text"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" sm="8" md="8" lg="8" xl="8">
+                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                        <label class="font-weight-bold" for="">RNC</label>
+                        <v-text-field
+                          solo
+                          v-model="editedItem.rnc"
+                          :hide-details="hideDetails(rncErrors.length)"
+                          :error-messages="rncErrors"
+                          @input="$v.editedItem.rnc.$touch()"
+                          @blur="$v.editedItem.rnc.$touch()"
+                          label="RNC"
+                          type="text"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                        <label class="font-weight-bold" for="">Cedula</label>
+                        <v-text-field
+                          solo
+                          v-model="editedItem.aid"
+                          :hide-details="hideDetails(aidErrors.length)"
+                          :error-messages="aidErrors"
+                          @input="$v.editedItem.aid.$touch()"
+                          @blur="$v.editedItem.aid.$touch()"
+                          label="Cedula"
+                          type="text"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                        <label class="font-weight-bold" for="">Correo</label>
+                        <v-text-field
+                          solo
+                          v-model="editedItem.email"
+                          :hide-details="hideDetails(emailErrors.length)"
+                          :error-messages="emailErrors"
+                          @input="$v.editedItem.email.$touch()"
+                          @blur="$v.editedItem.email.$touch()"
+                          label="Correo"
+                          type="email"
+                        ></v-text-field>
+                      </v-col>
+
+                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                        <label class="font-weight-bold" for="">Telefono</label>
+                        <v-text-field
+                          solo
+                          v-model="editedItem.phone1"
+                          :hide-details="hideDetails(phone1Errors.length)"
+                          :error-messages="phone1Errors"
+                          @input="$v.editedItem.phone1.$touch()"
+                          @blur="$v.editedItem.phone1.$touch()"
+                          label="Telefono"
+                          type="text"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                        <label class="font-weight-bold" for="">Celuar</label>
+                        <v-text-field
+                          solo
+                          v-model="editedItem.phone2"
+                          :hide-details="hideDetails(phone2Errors.length)"
+                          :error-messages="phone2Errors"
+                          @input="$v.editedItem.phone2.$touch()"
+                          @blur="$v.editedItem.phone2.$touch()"
+                          label="Cedula"
+                          type="text"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                        <label class="font-weight-bold" for="">Direccion</label>
+                        <v-text-field
+                          solo
+                          v-model="editedItem.address"
+                          :hide-details="hideDetails(addressErrors.length)"
+                          :error-messages="addressErrors"
+                          @input="$v.editedItem.address.$touch()"
+                          @blur="$v.editedItem.address.$touch()"
+                          label="Direccion"
+                          type="text"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                         <label class="font-weight-bold" for=""
-                          >Descripción <span class="error--text">*</span></label
+                          >Descripcion</label
                         >
                         <v-text-field
                           solo
-                          required
                           v-model="editedItem.description"
                           :hide-details="hideDetails(descriptionErrors.length)"
                           :error-messages="descriptionErrors"
                           @input="$v.editedItem.description.$touch()"
                           @blur="$v.editedItem.description.$touch()"
-                          label="Descripción"
+                          label="Descripcion"
                           type="text"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="4" md="4" lg="4" xl="4">
-                        <label class="font-weight-bold" for=""
-                          >Referencia Larga</label
-                        >
-                        <v-text-field
-                          solo
-                          v-model="editedItem.referencelarge"
-                          :hide-details="
-                            hideDetails(referencelargeErrors.length)
-                          "
-                          :error-messages="referencelargeErrors"
-                          @input="$v.editedItem.referencelarge.$touch()"
-                          @blur="$v.editedItem.referencelarge.$touch()"
-                          label="Referencia Larga"
-                          type="text"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="4" md="4" lg="4" xl="4">
-                        <label class="font-weight-bold" for=""
-                          >Referencia Corta</label
-                        >
-                        <v-text-field
-                          solo
-                          v-model="editedItem.referencesmall"
-                          :hide-details="
-                            hideDetails(referencesmallErrors.length)
-                          "
-                          :error-messages="referencesmallErrors"
-                          @input="$v.editedItem.referencesmall.$touch()"
-                          @blur="$v.editedItem.referencesmall.$touch()"
-                          label="Referencia Corta"
-                          type="text"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="4" md="4" lg="4" xl="4">
-                        <label class="font-weight-bold" for="">Stock</label>
-                        <v-text-field
-                          solo
-                          v-model="editedItem.stock"
-                          :hide-details="hideDetails(stockErrors.length)"
-                          :error-messages="stockErrors"
-                          @input="$v.editedItem.stock.$touch()"
-                          @blur="$v.editedItem.stock.$touch()"
-                          label="Stock"
-                          type="number"
                         ></v-text-field>
                       </v-col>
                     </v-row>
@@ -221,14 +223,6 @@
         <template v-slot:[`item.options`]="{ item }">
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon v-bind="attrs" v-on="on" small class="mr-2">
-                mdi-chart-areaspline
-              </v-icon>
-            </template>
-            <span>Reportes</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
               <v-icon
                 v-bind="attrs"
                 v-on="on"
@@ -251,7 +245,7 @@
           </v-tooltip>
         </template>
         <template v-slot:no-data>
-          <v-btn color="primary" @click="getProducts"> Actualizar </v-btn>
+          <v-btn color="primary" @click="getProviders"> Actualizar </v-btn>
         </template>
         <template v-slot:no-results> Lo que esta buscando no aparece </template>
       </v-data-table>
@@ -265,7 +259,7 @@ import {
   required,
   maxLength,
   minLength,
-  decimal,
+  email,
   helpers,
 } from "vuelidate/lib/validators";
 const alpha = helpers.regex("alpha", /^[a-zA-Z-0-9- ]*$/);
@@ -274,32 +268,38 @@ export default {
   mixins: [validationMixin],
   validations: {
     editedItem: {
-      barcode: {
+      namecompany: {
         required,
-        decimal,
-      },
-      description: {
-        required,
-        alpha,
         maxLength: maxLength(100),
         minLength: minLength(1),
-      },
-      referencelarge: {
         alpha,
-        maxLength: maxLength(50),
-        minLength: minLength(1),
       },
-      referencesmall: {
-        alpha,
+      rnc: {
         maxLength: maxLength(25),
-        minLength: minLength(1),
       },
-      stock: {
-        decimal,
+      aid: {
+        maxLength: maxLength(25),
+      },
+      email: {
+        email,
+      },
+      phone1: {
+        maxLength: maxLength(25),
+      },
+      phone2: {
+        maxLength: maxLength(25),
+      },
+      address: {
+        maxLength: maxLength(50),
+        alpha,
+      },
+      description: {
+        maxLength: maxLength(100),
+        alpha,
       },
     },
   },
-  name: "Dashboard-Product",
+  name: "Dashboard-Provider",
   data: () => ({
     search: null,
     tableLoading: false,
@@ -307,39 +307,45 @@ export default {
     btnDLoading: false,
     headers: [
       {
-        text: "Codigo Barra",
+        text: "Nombre",
         align: "start",
-        value: "barcode",
+        sortable: true,
+        value: "namecompany",
       },
-      { text: "Descripción", sortable: true, value: "description" },
-      { text: "Referencia", value: "referencelarge" },
-      { text: "Ref Corta", value: "referencesmall" },
-      { text: "Compra", value: "buy" },
-      { text: "Venta", value: "sale" },
-      { text: "Stock", value: "stock" },
-      { text: "Existencia", value: "existence" },
+      { text: "RNC", value: "rnc" },
+      { text: "Cedula", value: "aid" },
+      { text: "Correo", value: "email" },
+      { text: "Telefono", value: "phone1" },
+      { text: "Telefono 2", value: "phone2" },
+      { text: "Direccion", value: "address" },
+      { text: "Descripción", value: "description" },
       { text: "Fecha de Creacion", value: "createdDate" },
       { text: "Opciones", align: "end", value: "options", sortable: false },
     ],
-    inputBarCode: false,
-    products: [],
+    providers: [],
     dialog: false,
     dialogDelete: false,
     dialogSaveLoading: false,
     editedIndex: -1,
     editedItem: {
-      barcode: null,
+      namecompany: null,
       description: null,
-      referencelarge: null,
-      referencesmall: null,
-      stock: 0,
+      rnc: null,
+      aid: null,
+      email: null,
+      phone1: null,
+      phone2: null,
+      address: null,
     },
     defaultItem: {
-      barcode: null,
+      namecompany: null,
       description: null,
-      referencelarge: null,
-      referencesmall: null,
-      stock: 0,
+      rnc: null,
+      aid: null,
+      email: null,
+      phone1: null,
+      phone2: null,
+      address: null,
     },
   }),
   watch: {
@@ -351,44 +357,32 @@ export default {
     },
   },
   created() {
-    this.getProducts();
+    this.getProviders();
   },
-
   methods: {
-    generateBarCode() {
-      this.inputBarCode = true;
-      this.editedItem.barcode =
-        Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
-    },
     editItem(item) {
-      this.inputBarCode = true;
-      this.editedIndex = this.products.indexOf(item);
+      this.editedIndex = this.providers.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-
     deleteItem(item) {
-      this.editedIndex = this.products.indexOf(item);
+      this.editedIndex = this.providers.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
-
     deleteItemConfirm() {
-      this.deleteProduct(this.editedItem);
+      this.deleteProvider(this.editedItem);
     },
-
     close() {
       this.$v.$reset();
       this.btnLoading = false;
       this.tableLoading = false;
       this.dialog = false;
-      this.inputBarCode = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
     },
-
     closeDelete() {
       this.tableLoading = false;
       this.btnDLoading = false;
@@ -398,16 +392,16 @@ export default {
         this.editedIndex = -1;
       });
     },
-
     save() {
-      if (this.editedIndex > -1) this.updateProduct(this.editedItem);
-      else this.createProduct(this.editedItem);
+      if (this.editedIndex > -1) this.updateProvider(this.editedItem);
+      else this.createProvider(this.editedItem);
     },
-    async getProducts() {
-      this.products = [];
+
+    async getProviders() {
+      this.providers = [];
       this.tableLoading = true;
       await this.axios
-        .get("/product")
+        .get("/provider")
         .then((res) => {
           if (!res.data[1].permission) {
             this.$swal({
@@ -418,7 +412,7 @@ export default {
           } else {
             res.data[0].forEach((e) => {
               e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
-              this.products.push(e);
+              this.providers.push(e);
             });
           }
           this.tableLoading = false;
@@ -431,13 +425,13 @@ export default {
           });
         });
     },
-    async createProduct(data) {
+    async createProvider(data) {
       this.tableLoading = true;
       this.btnLoading = true;
       this.$v.$touch();
       if (!this.$v.$invalid) {
         await this.axios
-          .post("/product", data)
+          .post("/provider", data)
           .then((res) => {
             if (!res.data[1].permission) {
               this.$swal({
@@ -448,7 +442,7 @@ export default {
             } else {
               res.data[0].forEach((e) => {
                 e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
-                this.products.push(e);
+                this.providers.push(e);
               });
             }
             this.close();
@@ -462,13 +456,13 @@ export default {
           });
       }
     },
-    async updateProduct(data) {
+    async updateProvider(data) {
       this.tableLoading = true;
       this.btnLoading = true;
       this.$v.$touch();
       if (!this.$v.$invalid) {
         await this.axios
-          .put(`/product/${data._id}`, data)
+          .put(`/provider/${data._id}`, data)
           .then((res) => {
             if (!res.data.permission) {
               this.$swal({
@@ -477,7 +471,7 @@ export default {
                 text: res.data.msg,
               });
             } else {
-              Object.assign(this.products[this.editedIndex], res.data.item);
+              Object.assign(this.providers[this.editedIndex], res.data.item);
             }
             this.close();
           })
@@ -490,11 +484,11 @@ export default {
           });
       }
     },
-    async deleteProduct(data) {
+    async deleteProvider(data) {
       this.tableLoading = true;
       this.btnDLoading = true;
       await this.axios
-        .delete(`/product/${data._id}`)
+        .delete(`/provider/${data._id}`)
         .then((res) => {
           if (!res.data.permission) {
             this.$swal({
@@ -503,7 +497,7 @@ export default {
               text: res.data.msg,
             });
           } else {
-            this.products.splice(this.editedIndex, 1);
+            this.providers.splice(this.editedIndex, 1);
           }
           this.closeDelete();
         })
@@ -524,59 +518,73 @@ export default {
     },
   },
   computed: {
-    stockErrors() {
+    addressErrors() {
       const errors = [];
-      if (!this.$v.editedItem.stock.$dirty) return errors;
-      !this.$v.editedItem.stock.decimal &&
-        errors.push("El codigo de barra solo permite numeros.");
-      return errors;
-    },
-    referencesmallErrors() {
-      const errors = [];
-      if (!this.$v.editedItem.referencesmall.$dirty) return errors;
-      !this.$v.editedItem.referencesmall.maxLength &&
-        errors.push("La descripcion debe tener 100 caracteres como máximo.");
-      !this.$v.editedItem.referencesmall.minLength &&
-        errors.push("La descripcion debe tener 1 caracteres como minimo.");
-      !this.$v.editedItem.referencesmall.alpha &&
+      if (!this.$v.editedItem.address.$dirty) return errors;
+      !this.$v.editedItem.address.maxLength &&
+        errors.push("La direccion debe tener 100 caracteres como máximo.");
+      !this.$v.editedItem.address.alpha &&
         errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },
-    referencelargeErrors() {
+    phone2Errors() {
       const errors = [];
-      if (!this.$v.editedItem.referencelarge.$dirty) return errors;
-      !this.$v.editedItem.referencelarge.maxLength &&
-        errors.push("La descripcion debe tener 100 caracteres como máximo.");
-      !this.$v.editedItem.referencelarge.minLength &&
-        errors.push("La descripcion debe tener 1 caracteres como minimo.");
-      !this.$v.editedItem.referencelarge.alpha &&
-        errors.push("Solo es permitido a-z-A-Z-0-9.");
+      if (!this.$v.editedItem.phone2.$dirty) return errors;
+      !this.$v.editedItem.phone2.maxLength &&
+        errors.push("El numero debe tener 25 caracteres como máximo.");
+      return errors;
+    },
+    phone1Errors() {
+      const errors = [];
+      if (!this.$v.editedItem.phone1.$dirty) return errors;
+      !this.$v.editedItem.phone1.maxLength &&
+        errors.push("El numero debe tener 25 caracteres como máximo.");
+      return errors;
+    },
+    emailErrors() {
+      const errors = [];
+      if (!this.$v.editedItem.email.$dirty) return errors;
+      !this.$v.editedItem.email.email && errors.push("El correo no es valido.");
+      return errors;
+    },
+    aidErrors() {
+      const errors = [];
+      if (!this.$v.editedItem.aid.$dirty) return errors;
+      !this.$v.editedItem.aid.maxLength &&
+        errors.push("La cedula debe tener 25 caracteres como máximo.");
+      return errors;
+    },
+    rncErrors() {
+      const errors = [];
+      if (!this.$v.editedItem.rnc.$dirty) return errors;
+      !this.$v.editedItem.rnc.maxLength &&
+        errors.push("El RNC debe tener 25 caracteres como máximo.");
       return errors;
     },
     descriptionErrors() {
       const errors = [];
       if (!this.$v.editedItem.description.$dirty) return errors;
-      !this.$v.editedItem.description.required &&
-        errors.push("La descripcion es requerido.");
       !this.$v.editedItem.description.maxLength &&
         errors.push("La descripcion debe tener 100 caracteres como máximo.");
-      !this.$v.editedItem.description.minLength &&
-        errors.push("La descripcion debe tener 1 caracteres como minimo.");
       !this.$v.editedItem.description.alpha &&
         errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },
-    barcodeErrors() {
+    namecompanyErrors() {
       const errors = [];
-      if (!this.$v.editedItem.barcode.$dirty) return errors;
-      !this.$v.editedItem.barcode.required &&
-        errors.push("El codigo de barra es requerido.");
-      !this.$v.editedItem.barcode.decimal &&
-        errors.push("El codigo de barra solo permite numeros.");
+      if (!this.$v.editedItem.namecompany.$dirty) return errors;
+      !this.$v.editedItem.namecompany.required &&
+        errors.push("El nombre es requerido.");
+      !this.$v.editedItem.namecompany.maxLength &&
+        errors.push("El nombre debe tener 100 caracteres como máximo.");
+      !this.$v.editedItem.namecompany.minLength &&
+        errors.push("El nombre debe tener 1 caracteres como minimo.");
+      !this.$v.editedItem.namecompany.alpha &&
+        errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },
     formTitle() {
-      return this.editedIndex === -1 ? "Nuevo Producto" : "Editar Producto";
+      return this.editedIndex === -1 ? "Nuevo Proveedor" : "Editar Proveedor";
     },
   },
 };

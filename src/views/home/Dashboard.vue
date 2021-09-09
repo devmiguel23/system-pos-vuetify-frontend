@@ -35,7 +35,6 @@
         <template v-for="(item, i) in items">
           <v-list-group
             mandatory
-            active-class="primary white--text"
             v-if="item.children"
             :key="i"
             :append-icon="item.model == true ? item.iconUp : item.iconDown"
@@ -156,6 +155,16 @@ export default {
         text: "Usuarios",
         route: "/dashboard/users",
       },
+      {
+        icon: "mdi-account-tie",
+        text: "Proveedores",
+        route: "/dashboard/provider",
+      },
+      {
+        icon: "mdi-account-cash",
+        text: "Clientes",
+        route: "/dashboard/client",
+      },
       // {
       //   iconUp: "mdi-chevron-up",
       //   iconDown: "mdi-chevron-down",
@@ -183,15 +192,20 @@ export default {
         model: false,
         children: [
           {
-            icon: "mdi-circle",
+            icon: "mdi-store",
             text: "Productos",
             route: "/dashboard/product",
           },
           {
-            icon: "mdi-circle",
-            text: "Agregar Entradas",
-            route: "/dashboard/addproducts",
+            icon: "mdi-table-star",
+            text: "Categorias",
+            route: "/dashboard/categories",
           },
+          // {
+          //   icon: "",
+          //   text: "Agregar Entradas",
+          //   route: "/dashboard/addproducts",
+          // },
         ],
       },
     ],

@@ -220,6 +220,7 @@
               persistent
               v-model="dialogPermission"
               max-width="900px"
+              scrollable
             >
               <v-card>
                 <v-toolbar dark color="primary">
@@ -250,7 +251,6 @@
                       :sort-by="['upgrade']"
                       :sort-desc="[true]"
                       class="elevation-1"
-                      dense
                       :loading="tableLoading"
                       loading-text="Por favor... espere un momento."
                       hide-default-footer
@@ -261,12 +261,15 @@
                         itemsPerPageOptions: [255, -1],
                         pageText: '{0}-{1} de {2}',
                       }"
+                      dense
                     >
                       <template v-slot:top>
                         <v-toolbar flat>
                           <v-toolbar-title
-                            >Permisos de
-                            {{ editedItem.fullname }}</v-toolbar-title
+                            >Permisos de,
+                            <strong>
+                              {{ editedItem.fullname }}</strong
+                            ></v-toolbar-title
                           >
                           <v-divider class="mx-4" inset vertical></v-divider>
                           <v-spacer></v-spacer>
@@ -466,6 +469,9 @@ export default {
     },
     dialogDelete(val) {
       val || this.closeDelete();
+    },
+    dialogPermission(val) {
+      val || this.closePermission();
     },
   },
   created() {

@@ -40,6 +40,15 @@ const routes = [
         },
       },
       {
+        path: '/dashboard/provider',
+        name: 'Dashboard-Provider',
+        component: () => import('@/views/home/Provider.vue'),
+        meta: {
+          title: 'Proveedores',
+          requiresAuth: true
+        },
+      },
+      {
         path: '/dashboard/product',
         name: 'Dashboard-Product',
         component: () => import('@/views/home/Product.vue'),
