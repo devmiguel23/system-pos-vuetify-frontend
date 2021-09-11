@@ -366,17 +366,14 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-
     deleteItem(item) {
       this.editedIndex = this.products.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
-
     deleteItemConfirm() {
       this.deleteProduct(this.editedItem);
     },
-
     close() {
       this.$v.$reset();
       this.btnLoading = false;
@@ -388,7 +385,6 @@ export default {
         this.editedIndex = -1;
       });
     },
-
     closeDelete() {
       this.tableLoading = false;
       this.btnDLoading = false;
@@ -398,7 +394,6 @@ export default {
         this.editedIndex = -1;
       });
     },
-
     save() {
       if (this.editedIndex > -1) this.updateProduct(this.editedItem);
       else this.createProduct(this.editedItem);
@@ -409,26 +404,26 @@ export default {
       await this.axios
         .get("/product")
         .then((res) => {
-          if (!res.data[1].permission) {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: res.data.msg,
-            });
-          } else {
-            res.data[0].forEach((e) => {
-              e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
-              this.products.push(e);
-            });
-          }
+          res.data[0].forEach((e) => {
+            e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
+            this.products.push(e);
+          });
           this.tableLoading = false;
         })
         .catch((err) => {
-          this.$swal({
-            icon: "error",
-            title: "Oops...",
-            text: err.response.data.msg,
-          });
+          if (err.response.status == 401) {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: "La sesion expiro, debe iniciar sesión otra vez.",
+            });
+          } else {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+          }
         });
     },
     async createProduct(data) {
@@ -439,26 +434,26 @@ export default {
         await this.axios
           .post("/product", data)
           .then((res) => {
-            if (!res.data[1].permission) {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: res.data.msg,
-              });
-            } else {
-              res.data[0].forEach((e) => {
-                e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
-                this.products.push(e);
-              });
-            }
+            res.data[0].forEach((e) => {
+              e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
+              this.products.push(e);
+            });
             this.close();
           })
           .catch((err) => {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.msg,
-            });
+            if (err.response.status == 401) {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: "La sesion expiro, debe iniciar sesión otra vez.",
+              });
+            } else {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: err.response.data.message,
+              });
+            }
           });
       }
     },
@@ -470,23 +465,23 @@ export default {
         await this.axios
           .put(`/product/${data._id}`, data)
           .then((res) => {
-            if (!res.data.permission) {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: res.data.msg,
-              });
-            } else {
-              Object.assign(this.products[this.editedIndex], res.data.item);
-            }
+            Object.assign(this.products[this.editedIndex], res.data.item);
             this.close();
           })
           .catch((err) => {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.msg,
-            });
+            if (err.response.status == 401) {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: "La sesion expiro, debe iniciar sesión otra vez.",
+              });
+            } else {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: err.response.data.message,
+              });
+            }
           });
       }
     },
@@ -495,24 +490,24 @@ export default {
       this.btnDLoading = true;
       await this.axios
         .delete(`/product/${data._id}`)
-        .then((res) => {
-          if (!res.data.permission) {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: res.data.msg,
-            });
-          } else {
-            this.products.splice(this.editedIndex, 1);
-          }
+        .then(() => {
+          this.products.splice(this.editedIndex, 1);
           this.closeDelete();
         })
         .catch((err) => {
-          this.$swal({
-            icon: "error",
-            title: "Oops...",
-            text: err.response.data.msg,
-          });
+          if (err.response.status == 401) {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: "La sesion expiro, debe iniciar sesión otra vez.",
+            });
+          } else {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+          }
         });
     },
     hideDetails(val) {

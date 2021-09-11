@@ -1,16 +1,29 @@
 <template>
   <v-container class="ma-0 pa-0" fluid>
-    <v-system-bar window app>
+    <v-system-bar window app class="systembar">
+      <div class="d-flex align-center">
+        <div>
+          <v-img
+            width="19"
+            height="19"
+            lazy-src="@/assets/avatars/150-2.jpg"
+            src="@/assets/avatars/150-2.jpg"
+          ></v-img>
+        </div>
+        <div class="mx-2 grey--text text--lighten-2 font-weight-normal">
+          Auto Repuestos
+        </div>
+      </div>
       <v-spacer></v-spacer>
 
-      <v-btn class="btnkit d-flex align-center pl-2 mx-1" small tile icon>
-        <v-icon>mdi-minus</v-icon>
+      <v-btn class="d-flex align-center pl-2 mx-1" small tile icon>
+        <v-icon class="white--text">mdi-minus</v-icon>
       </v-btn>
-      <v-btn class="btnkit d-flex align-center pl-2 mx-1" small tile icon>
-        <v-icon>mdi-checkbox-blank-outline</v-icon>
+      <v-btn class="d-flex align-center pl-2 mx-1" small tile icon>
+        <v-icon class="white--text">mdi-checkbox-blank-outline</v-icon>
       </v-btn>
-      <v-btn class="btnkit d-flex align-center pl-2 mx-1" small tile icon>
-        <v-icon>mdi-close</v-icon>
+      <v-btn class="d-flex align-center pl-2 mx-1" small tile icon>
+        <v-icon class="white--text">mdi-close</v-icon>
       </v-btn>
     </v-system-bar>
     <v-navigation-drawer :mini-variant="mini" permanent app>
@@ -161,7 +174,7 @@ export default {
         route: "/dashboard/provider",
       },
       {
-        icon: "mdi-account-cash",
+        icon: "mdi-account-multiple",
         text: "Clientes",
         route: "/dashboard/client",
       },

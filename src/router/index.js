@@ -8,6 +8,9 @@ const routes = [
   //Init Router
   {
     path: '/',
+    meta: {
+      requiresAuth: true
+    },
     redirect: { name: 'Dashboard' }
   },
   //Errors
@@ -20,6 +23,28 @@ const routes = [
       requiresAuth: false
     },
   },
+  //authentication
+  //dashboard
+  {
+    path: '/auth',
+    name: "Auth",
+    component: () => import('@/views/auth/Auth.vue'),
+    redirect: { name: 'Dashboard-SignIn' },
+    meta: {
+      requiresAuth: false
+    },
+    children: [
+      {
+        path: '/auth/signin',
+        name: 'Dashboard-SignIn',
+        component: () => import('@/views/auth/SignIn.vue'),
+        meta: {
+          title: 'Iniciar Session',
+          requiresAuth: false
+        },
+      },
+    ]
+  },
   //dashboard
   {
     path: '/dashboard',
@@ -30,6 +55,15 @@ const routes = [
       requiresAuth: true
     },
     children: [
+      {
+        path: '/dashboard/home',
+        name: 'Dashboard-Home',
+        component: () => import('@/views/home/Home.vue'),
+        meta: {
+          title: 'Escritorio',
+          requiresAuth: true
+        },
+      },
       {
         path: '/dashboard/users',
         name: 'Dashboard-Users',

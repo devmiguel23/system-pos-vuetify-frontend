@@ -491,26 +491,26 @@ export default {
       await this.axios
         .put(`/users/permission/${data._id}`, { claims: claims })
         .then((res) => {
-          if (!res.data[1].permission) {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: res.data.msg,
-            });
-          } else {
-            Object.assign(this.users[this.editedIndex], {
-              claims: res.data[0],
-            });
-          }
+          Object.assign(this.users[this.editedIndex], {
+            claims: res.data[0],
+          });
           this.claims = [];
           this.closePermission();
         })
         .catch((err) => {
-          this.$swal({
-            icon: "error",
-            title: "Oops...",
-            text: err.response.data.msg,
-          });
+          if (err.response.status == 401) {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: "La sesion expiro, debe iniciar sesión otra vez.",
+            });
+          } else {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+          }
         });
     },
     async getPermission() {
@@ -521,11 +521,19 @@ export default {
           this.permissionGet = res.data[0];
         })
         .catch((err) => {
-          this.$swal({
-            icon: "error",
-            title: "Oops...",
-            text: err.response.data.msg,
-          });
+          if (err.response.status == 401) {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: "La sesion expiro, debe iniciar sesión otra vez.",
+            });
+          } else {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+          }
         });
     },
     async getUsers() {
@@ -534,26 +542,26 @@ export default {
       await this.axios
         .get("/users")
         .then((res) => {
-          if (!res.data[1].permission) {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: res.data.msg,
-            });
-          } else {
-            res.data[0].forEach((e) => {
-              e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
-              this.users.push(e);
-            });
-          }
+          res.data[0].forEach((e) => {
+            e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
+            this.users.push(e);
+          });
           this.tableLoading = false;
         })
         .catch((err) => {
-          this.$swal({
-            icon: "error",
-            title: "Oops...",
-            text: err.response.data.msg,
-          });
+          if (err.response.status == 401) {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: "La sesion expiro, debe iniciar sesión otra vez.",
+            });
+          } else {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+          }
         });
     },
     async createUsers(data) {
@@ -562,29 +570,26 @@ export default {
         await this.axios
           .post("/users", data)
           .then((res) => {
-            if (!res.data[1].permission) {
-              this.$v.$reset();
-              this.btnLoading = false;
-              this.tableLoading = false;
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: res.data.msg,
-              });
-            } else {
-              res.data[0].forEach((e) => {
-                e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
-                this.users.push(e);
-              });
-            }
+            res.data[0].forEach((e) => {
+              e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
+              this.users.push(e);
+            });
             this.close();
           })
           .catch((err) => {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.msg,
-            });
+            if (err.response.status == 401) {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: "La sesion expiro, debe iniciar sesión otra vez.",
+              });
+            } else {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: err.response.data.message,
+              });
+            }
           });
       }
     },
@@ -596,26 +601,23 @@ export default {
         await this.axios
           .put(`/users/${data._id}`, data)
           .then((res) => {
-            if (!res.data.permission) {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: res.data.msg,
-              });
-            } else {
-              Object.assign(this.users[this.editedIndex], res.data.user);
-            }
+            Object.assign(this.users[this.editedIndex], res.data.user);
             this.close();
           })
           .catch((err) => {
-            this.$v.$reset();
-            this.btnLoading = false;
-            this.tableLoading = false;
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.msg,
-            });
+            if (err.response.status == 401) {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: "La sesion expiro, debe iniciar sesión otra vez.",
+              });
+            } else {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: err.response.data.message,
+              });
+            }
           });
       }
     },
@@ -624,24 +626,24 @@ export default {
       this.btnDLoading = true;
       await this.axios
         .delete(`/users/${data._id}`)
-        .then((res) => {
-          if (!res.data.permission) {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: res.data.msg,
-            });
-          } else {
-            this.users.splice(this.editedIndex, 1);
-          }
+        .then(() => {
+          this.users.splice(this.editedIndex, 1);
           this.closeDelete();
         })
         .catch((err) => {
-          this.$swal({
-            icon: "error",
-            title: "Oops...",
-            text: err.response.data.msg,
-          });
+          if (err.response.status == 401) {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: "La sesion expiro, debe iniciar sesión otra vez.",
+            });
+          } else {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+          }
         });
     },
     hideDetails(val) {

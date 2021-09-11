@@ -12,10 +12,14 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 Vue.config.productionTip = false
 
 axios.defaults.baseURL = "http://localhost:4000/api"
-axios.defaults.headers = {
-  'Content-Type': 'application/json',
-  'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzdjMjUzZTQ4MjIyNTczYzI1YmFkYiIsInVzZXJuYW1lIjoiaGRqaGFrZXIiLCJlbWFpbCI6Im1kZXNhcnJvbGxhZG9yMjNAZ21haWwuY29tIiwiZnVsbG5hbWUiOiJNaWd1ZWwgRGUgSmVzdXMiLCJwaG9uZW51bWJlciI6Iig4MDkpLTkyMy0xNDEyIiwiYWlkIjoiNDAyLTI0NzYwNTItNiIsImNsYWltcyI6WzI0OCwyNDksMjUwLDI1MSwyNTIsMjUzLDI1NCwyNDcsMjQ2LDI1NSwyMzgsMjM5LDI0MCwyNDEsMjQyLDI0MywyNDQsMjQ1XSwic3RhdHVzIjp0cnVlLCJpYXQiOjE2MzExNjMyNTEsImV4cCI6MTYzMTI0OTY1MX0.62eDxDnwdnTUU7D9FHfkqvWkS9Rjn5jXNf13xJ2V9pM'
-}
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('Authorization');
+
+// axios.interceptors.response.use(undefined, error => {
+//   console.log(error);
+//   // if (error.response.status == 401 && error.response.statusText == 'Unauthorized') {
+//   //   return Promise.reject(error);
+//   // }
+// });
 
 Vue.use(VueAxios, axios)
 Vue.use(VueSweetalert2);

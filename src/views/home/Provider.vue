@@ -291,11 +291,11 @@ export default {
       },
       address: {
         maxLength: maxLength(50),
-        alpha,
+        // alpha,
       },
       description: {
         maxLength: maxLength(100),
-        alpha,
+        // alpha,
       },
     },
   },
@@ -403,26 +403,27 @@ export default {
       await this.axios
         .get("/provider")
         .then((res) => {
-          if (!res.data[1].permission) {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: res.data.msg,
-            });
-          } else {
-            res.data[0].forEach((e) => {
-              e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
-              this.providers.push(e);
-            });
-          }
+          res.data[0].forEach((e) => {
+            e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
+            this.providers.push(e);
+          });
+
           this.tableLoading = false;
         })
         .catch((err) => {
-          this.$swal({
-            icon: "error",
-            title: "Oops...",
-            text: err.response.data.msg,
-          });
+          if (err.response.status == 401) {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: "La sesion expiro, debe iniciar sesión otra vez.",
+            });
+          } else {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+          }
         });
     },
     async createProvider(data) {
@@ -433,26 +434,27 @@ export default {
         await this.axios
           .post("/provider", data)
           .then((res) => {
-            if (!res.data[1].permission) {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: res.data.msg,
-              });
-            } else {
-              res.data[0].forEach((e) => {
-                e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
-                this.providers.push(e);
-              });
-            }
+            res.data[0].forEach((e) => {
+              e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
+              this.providers.push(e);
+            });
+
             this.close();
           })
           .catch((err) => {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.msg,
-            });
+            if (err.response.status == 401) {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: "La sesion expiro, debe iniciar sesión otra vez.",
+              });
+            } else {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: err.response.data.message,
+              });
+            }
           });
       }
     },
@@ -464,23 +466,23 @@ export default {
         await this.axios
           .put(`/provider/${data._id}`, data)
           .then((res) => {
-            if (!res.data.permission) {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: res.data.msg,
-              });
-            } else {
-              Object.assign(this.providers[this.editedIndex], res.data.item);
-            }
+            Object.assign(this.providers[this.editedIndex], res.data.item);
             this.close();
           })
           .catch((err) => {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.msg,
-            });
+            if (err.response.status == 401) {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: "La sesion expiro, debe iniciar sesión otra vez.",
+              });
+            } else {
+              this.$swal({
+                icon: "error",
+                title: "Oops...",
+                text: err.response.data.message,
+              });
+            }
           });
       }
     },
@@ -489,24 +491,24 @@ export default {
       this.btnDLoading = true;
       await this.axios
         .delete(`/provider/${data._id}`)
-        .then((res) => {
-          if (!res.data.permission) {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: res.data.msg,
-            });
-          } else {
-            this.providers.splice(this.editedIndex, 1);
-          }
+        .then(() => {
+          this.providers.splice(this.editedIndex, 1);
           this.closeDelete();
         })
         .catch((err) => {
-          this.$swal({
-            icon: "error",
-            title: "Oops...",
-            text: err.response.data.msg,
-          });
+          if (err.response.status == 401) {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: "La sesion expiro, debe iniciar sesión otra vez.",
+            });
+          } else {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
+          }
         });
     },
     hideDetails(val) {
@@ -523,8 +525,8 @@ export default {
       if (!this.$v.editedItem.address.$dirty) return errors;
       !this.$v.editedItem.address.maxLength &&
         errors.push("La direccion debe tener 100 caracteres como máximo.");
-      !this.$v.editedItem.address.alpha &&
-        errors.push("Solo es permitido a-z-A-Z-0-9.");
+      // !this.$v.editedItem.address.alpha &&
+      //   errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },
     phone2Errors() {
@@ -566,8 +568,8 @@ export default {
       if (!this.$v.editedItem.description.$dirty) return errors;
       !this.$v.editedItem.description.maxLength &&
         errors.push("La descripcion debe tener 100 caracteres como máximo.");
-      !this.$v.editedItem.description.alpha &&
-        errors.push("Solo es permitido a-z-A-Z-0-9.");
+      // !this.$v.editedItem.description.alpha &&
+      //   errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },
     namecompanyErrors() {
