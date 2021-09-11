@@ -113,6 +113,14 @@
       </v-toolbar>
 
       <v-spacer></v-spacer>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn v-bind="attrs" v-on="on" icon @click="logout"
+            ><v-icon class="red--text">mdi-power</v-icon></v-btn
+          >
+        </template>
+        <span>Salir</span>
+      </v-tooltip>
     </v-app-bar>
     <v-main class="scroll-y">
       <v-card elevation="4" class="ma-2">
@@ -234,6 +242,10 @@ export default {
     ],
   }),
   methods: {
+    logout() {
+      localStorage.removeItem("Authorization");
+      this.$router.push("/auth");
+    },
     onScroll(e) {
       if (typeof window === "undefined") return;
       const top = window.pageYOffset || e.target.scrollTop || 0;

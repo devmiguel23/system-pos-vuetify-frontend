@@ -14,13 +14,6 @@ Vue.config.productionTip = false
 axios.defaults.baseURL = "http://localhost:4000/api"
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('Authorization');
 
-// axios.interceptors.response.use(undefined, error => {
-//   console.log(error);
-//   // if (error.response.status == 401 && error.response.statusText == 'Unauthorized') {
-//   //   return Promise.reject(error);
-//   // }
-// });
-
 Vue.use(VueAxios, axios)
 Vue.use(VueSweetalert2);
 

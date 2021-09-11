@@ -1,55 +1,63 @@
 <template>
-  <div class="d-flex flex-column justify-center align-center">
-    <v-form @submit.prevent="signIn" class="my-4">
-      <label class="font-weight-bold" for="username">Nombre de Usuario</label>
-      <v-text-field
-        id="username"
-        required
-        :hide-details="hideDetails(usernameErrors.length)"
-        :error-messages="usernameErrors"
-        v-model.trim="form.username"
-        @input="$v.form.username.$touch()"
-        @blur="$v.form.username.$touch()"
-        class="mb-3"
-        type="text"
-        label="Nombre de Usuario"
-        solo
-      ></v-text-field>
-      <label class="font-weight-bold" for="password">Contraseña</label>
-      <v-text-field
-        id="password"
-        :append-icon="eyeShow ? 'mdi-eye' : 'mdi-eye-off'"
-        required
-        :hide-details="hideDetails(passwordErrors.length)"
-        :error-messages="passwordErrors"
-        @input="$v.form.password.$touch()"
-        @blur="$v.form.password.$touch()"
-        v-model.trim="form.password"
-        class="mb-3"
-        :type="eyeShow ? 'text' : 'password'"
-        @click:append="eyeShow = !eyeShow"
-        solo
-        label="Contraseña"
-      ></v-text-field>
-      <div class="mt-4 d-flex justify-space-between align-center">
-        <v-checkbox
-          class="ma-0 pa-0"
-          color="secondary"
-          label="Recuérdame"
-        ></v-checkbox>
-      </div>
-      <v-btn
-        :disabled="$v.$invalid"
-        type="submit"
-        block
-        color="primary"
-        elevation="2"
-        large
-        :loading="btnLoading"
-        >Entrar
-      </v-btn>
-    </v-form>
-  </div>
+  <v-card
+    :loading="loadingCard"
+    elevation="4"
+    width="500"
+    min-width="200"
+    max-width="400"
+  >
+    <div class="d-flex flex-column justify-center align-center">
+      <v-form @submit.prevent="signIn" class="my-4">
+        <label class="font-weight-bold" for="username">Nombre de Usuario</label>
+        <v-text-field
+          id="username"
+          required
+          :hide-details="hideDetails(usernameErrors.length)"
+          :error-messages="usernameErrors"
+          v-model.trim="form.username"
+          @input="$v.form.username.$touch()"
+          @blur="$v.form.username.$touch()"
+          class="mb-3"
+          type="text"
+          label="Nombre de Usuario"
+          solo
+        ></v-text-field>
+        <label class="font-weight-bold" for="password">Contraseña</label>
+        <v-text-field
+          id="password"
+          :append-icon="eyeShow ? 'mdi-eye' : 'mdi-eye-off'"
+          required
+          :hide-details="hideDetails(passwordErrors.length)"
+          :error-messages="passwordErrors"
+          @input="$v.form.password.$touch()"
+          @blur="$v.form.password.$touch()"
+          v-model.trim="form.password"
+          class="mb-3"
+          :type="eyeShow ? 'text' : 'password'"
+          @click:append="eyeShow = !eyeShow"
+          solo
+          label="Contraseña"
+        ></v-text-field>
+        <div class="mt-4 d-flex justify-space-between align-center">
+          <v-checkbox
+            class="ma-0 pa-0"
+            color="secondary"
+            label="Recuérdame"
+          ></v-checkbox>
+        </div>
+        <v-btn
+          :disabled="$v.$invalid"
+          type="submit"
+          block
+          color="primary"
+          elevation="2"
+          large
+          :loading="btnLoading"
+          >Entrar
+        </v-btn>
+      </v-form>
+    </div>
+  </v-card>
 </template>
 <script>
 import { validationMixin } from "vuelidate";
@@ -78,6 +86,7 @@ export default {
   },
   name: "Auth-SignIn",
   data: () => ({
+    loadingCard: false,
     btnLoading: false,
     eyeShow: false,
     form: {
@@ -91,22 +100,30 @@ export default {
   }),
   methods: {
     async signIn() {
-      await this.axios
-        .post("/signin", this.form)
-        .then((res) => {
-          console.log(res);
-          localStorage.setItem("Authorization", res.data.token);
-          Object.assign(this.form, this.defaultform);
-          this.$v.$reset();
-          this.$router.push({ name: "Dashboard" });
-        })
-        .catch((err) => {
-          this.$swal({
-            icon: "error",
-            title: "Oops...",
-            text: err.response.data.message,
+      this.loadingCard = true;
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        await this.axios
+          .post("/signin", this.form)
+          .then((res) => {
+            localStorage.setItem("Authorization", res.data.token);
+            this.axios.defaults.headers.common["Authorization"] =
+              "Bearer " + localStorage.getItem("Authorization");
+            Object.assign(this.form, this.defaultform);
+            this.$v.$reset();
+            setTimeout(() => {
+              this.loadingCard = false;
+              this.$router.push("/dashboard");
+            }, 1000);
+          })
+          .catch((err) => {
+            this.$swal({
+              icon: "error",
+              title: "Oops...",
+              text: err.response.data.message,
+            });
           });
-        });
+      }
     },
     hideDetails(val) {
       if (val <= 0) {
