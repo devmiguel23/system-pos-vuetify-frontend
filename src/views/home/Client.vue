@@ -45,9 +45,20 @@
                     solo
                     dense
                   ></v-text-field>
-                  <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                    Nuevo Cliente
-                  </v-btn>
+                  <v-tooltip bottom>
+                    <template #activator="{ on: onTooltip }">
+                      <v-btn
+                        class="mx-2"
+                        color="success"
+                        dark
+                        v-bind="attrs"
+                        v-on="{ ...on, ...onTooltip }"
+                      >
+                        <v-icon>mdi-plus-circle</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Nuevo Cliente</span>
+                  </v-tooltip>
                 </div>
               </template>
               <v-card>
@@ -572,11 +583,7 @@ export default {
         });
     },
     hideDetails(val) {
-      if (val <= 0) {
-        return true;
-      } else {
-        return false;
-      }
+      return val <= 0 ? true : false;
     },
   },
   computed: {

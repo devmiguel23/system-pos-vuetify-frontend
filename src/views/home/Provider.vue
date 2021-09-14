@@ -45,9 +45,20 @@
                     solo
                     dense
                   ></v-text-field>
-                  <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                    Nuevo Proveedor
-                  </v-btn>
+                  <v-tooltip bottom>
+                    <template #activator="{ on: onTooltip }">
+                      <v-btn
+                        class="mx-2"
+                        color="success"
+                        dark
+                        v-bind="attrs"
+                        v-on="{ ...on, ...onTooltip }"
+                      >
+                        <v-icon>mdi-plus-circle</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Nuevo Proveedor</span>
+                  </v-tooltip>
                 </div>
               </template>
               <v-card>
@@ -319,13 +330,12 @@ export default {
       { text: "Telefono 2", value: "phone2" },
       { text: "Direccion", value: "address" },
       { text: "Descripción", value: "description" },
-      { text: "Fecha de Creacion", value: "createdDate" },
+      // { text: "Fecha de Creacion", value: "createdDate" },
       { text: "Opciones", align: "end", value: "options", sortable: false },
     ],
     providers: [],
     dialog: false,
     dialogDelete: false,
-    dialogSaveLoading: false,
     editedIndex: -1,
     editedItem: {
       namecompany: null,
@@ -512,11 +522,7 @@ export default {
         });
     },
     hideDetails(val) {
-      if (val <= 0) {
-        return true;
-      } else {
-        return false;
-      }
+      return val <= 0 ? true : false;
     },
   },
   computed: {

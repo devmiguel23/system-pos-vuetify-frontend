@@ -29,14 +29,14 @@ const routes = [
     path: "/auth",
     name: "Auth",
     component: () => import("@/views/auth/Auth.vue"),
-    redirect: { name: "Dashboard-SignIn" },
+    redirect: { name: "Auth-SignIn" },
     meta: {
       requiresAuth: false,
     },
     children: [
       {
         path: "/auth/signin",
-        name: "Dashboard-SignIn",
+        name: "Auth-SignIn",
         component: () => import("@/views/auth/SignIn.vue"),
         meta: {
           title: "Iniciar Session",

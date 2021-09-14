@@ -45,9 +45,20 @@
                     solo
                     dense
                   ></v-text-field>
-                  <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                    Nuevo Usuario
-                  </v-btn>
+                  <v-tooltip bottom>
+                    <template #activator="{ on: onTooltip }">
+                      <v-btn
+                        class="mx-2"
+                        color="success"
+                        dark
+                        v-bind="attrs"
+                        v-on="{ ...on, ...onTooltip }"
+                      >
+                        <v-icon>mdi-plus-circle</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Nuevo Usuario</span>
+                  </v-tooltip>
                 </div>
               </template>
               <v-card>
@@ -208,7 +219,7 @@
                       :loading="btnDLoading"
                       @click="deleteItemConfirm"
                     >
-                      Save
+                      Guardar
                     </v-btn>
                   </v-toolbar-items>
                 </v-toolbar>
@@ -434,7 +445,7 @@ export default {
       { text: "Nombre Completo", value: "fullname" },
       { text: "Telefono", value: "phonenumber" },
       { text: "Cedula", value: "aid" },
-      { text: "Fecha", value: "createdDate" },
+      // { text: "Fecha", value: "createdDate" },
       { text: "Opciones", align: "end", value: "options", sortable: false },
     ],
     permissionGet: [],
@@ -647,11 +658,7 @@ export default {
         });
     },
     hideDetails(val) {
-      if (val <= 0) {
-        return true;
-      } else {
-        return false;
-      }
+      return val <= 0 ? true : false;
     },
     save() {
       if (this.editedIndex > -1) this.updateUsers(this.editedItem);

@@ -21,11 +21,15 @@
           pageText: '{0}-{1} de {2}',
         }"
       >
+        <!-- PRODUCTO  -->
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>Productos</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
+            <!-- DIALOG CATEGORIAS  -->
+            <!-- FIN DIALOG CATEGORIAS  -->
+            <!-- DIALOG PRODUCTO -->
             <v-dialog
               @keydown.esc="close"
               @keydown.enter="save"
@@ -45,9 +49,21 @@
                     solo
                     dense
                   ></v-text-field>
-                  <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                    Nuevo Producto
-                  </v-btn>
+
+                  <v-tooltip bottom>
+                    <template #activator="{ on: onTooltip }">
+                      <v-btn
+                        class="mx-2"
+                        color="success"
+                        dark
+                        v-bind="attrs"
+                        v-on="{ ...on, ...onTooltip }"
+                      >
+                        <v-icon>mdi-plus-circle</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Nuevo Producto</span>
+                  </v-tooltip>
                 </div>
               </template>
               <v-card>
@@ -59,7 +75,7 @@
                   <v-spacer></v-spacer>
                   <v-toolbar-items>
                     <v-btn
-                      :disabled="$v.$invalid"
+                      :disabled="$v.editedItem.$invalid"
                       :loading="btnLoading"
                       dark
                       text
@@ -83,14 +99,13 @@
                         <label class="font-weight-bold" for=""
                           >Generar Codigo
                         </label>
-                        <div class="d-flex align-end justify-center">
-                          <v-btn
-                            @click="generateBarCode"
-                            color="tertiary white--text"
-                            small
-                            >Generar</v-btn
-                          >
-                        </div>
+                        <v-btn
+                          block
+                          @click="generateBarCode"
+                          color="primary white--text"
+                          small
+                          ><v-icon>mdi-barcode-scan</v-icon></v-btn
+                        >
                       </v-col>
                       <v-col
                         cols="12"
@@ -180,11 +195,26 @@
                           type="number"
                         ></v-text-field>
                       </v-col>
+                      <v-col cols="12" sm="4" md="4" lg="4" xl="4">
+                        <label class="font-weight-bold" for="">Categoria</label>
+                        <v-select
+                          solo
+                          v-model="editedItem.category"
+                          :items="itemsCategory"
+                          item-text="name"
+                          item-value="_id"
+                          label="Categoria"
+                          hide-details
+                        ></v-select>
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
               </v-card>
             </v-dialog>
+            <product-component @onEventCagetory="onCategory" />
+            <!-- FIN DIALOG PRODUCTO -->
+            <!-- DIALOG DELETE  -->
             <v-dialog
               @keydown.esc="closeDelete"
               @keydown.enter="deleteItemConfirm"
@@ -215,9 +245,10 @@
                 </v-toolbar>
               </v-card>
             </v-dialog>
+            <!-- FIN DIALOG DELETE  -->
           </v-toolbar>
         </template>
-
+        <!-- FIN PRODUCTO  -->
         <template v-slot:[`item.options`]="{ item }">
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
@@ -300,7 +331,12 @@ export default {
     },
   },
   name: "Dashboard-Product",
+  components: {
+    ProductComponent: () => import("@/components/product/ProductComponent.vue"),
+  },
   data: () => ({
+    selectBoxCategory: null,
+    itemsCategory: [],
     search: null,
     tableLoading: false,
     btnLoading: false,
@@ -314,18 +350,18 @@ export default {
       { text: "Descripción", sortable: true, value: "description" },
       { text: "Referencia", value: "referencelarge" },
       { text: "Ref Corta", value: "referencesmall" },
+      { text: "Categoria", value: "category" },
       { text: "Compra", value: "buy" },
       { text: "Venta", value: "sale" },
       { text: "Stock", value: "stock" },
       { text: "Existencia", value: "existence" },
-      { text: "Fecha de Creacion", value: "createdDate" },
+      // { text: "Fecha de Creacion", value: "createdDate" },
       { text: "Opciones", align: "end", value: "options", sortable: false },
     ],
     inputBarCode: false,
     products: [],
     dialog: false,
     dialogDelete: false,
-    dialogSaveLoading: false,
     editedIndex: -1,
     editedItem: {
       barcode: null,
@@ -333,6 +369,7 @@ export default {
       referencelarge: null,
       referencesmall: null,
       stock: 0,
+      category: null,
     },
     defaultItem: {
       barcode: null,
@@ -340,6 +377,7 @@ export default {
       referencelarge: null,
       referencesmall: null,
       stock: 0,
+      category: null,
     },
   }),
   watch: {
@@ -353,8 +391,10 @@ export default {
   created() {
     this.getProducts();
   },
-
   methods: {
+    onCategory(value) {
+      this.itemsCategory = value;
+    },
     generateBarCode() {
       this.inputBarCode = true;
       this.editedItem.barcode =
@@ -398,16 +438,14 @@ export default {
       if (this.editedIndex > -1) this.updateProduct(this.editedItem);
       else this.createProduct(this.editedItem);
     },
+
     async getProducts() {
       this.products = [];
       this.tableLoading = true;
       await this.axios
         .get("/product")
-        .then((res) => {
-          res.data[0].forEach((e) => {
-            e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
-            this.products.push(e);
-          });
+        .then(async (res) => {
+          this.products = res.data;
           this.tableLoading = false;
         })
         .catch((err) => {
@@ -434,7 +472,7 @@ export default {
         await this.axios
           .post("/product", data)
           .then((res) => {
-            res.data[0].forEach((e) => {
+            res.data.forEach((e) => {
               e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
               this.products.push(e);
             });
@@ -465,7 +503,7 @@ export default {
         await this.axios
           .put(`/product/${data._id}`, data)
           .then((res) => {
-            Object.assign(this.products[this.editedIndex], res.data.item);
+            Object.assign(this.products[this.editedIndex], res.data);
             this.close();
           })
           .catch((err) => {
@@ -511,11 +549,7 @@ export default {
         });
     },
     hideDetails(val) {
-      if (val <= 0) {
-        return true;
-      } else {
-        return false;
-      }
+      return val <= 0 ? true : false;
     },
   },
   computed: {

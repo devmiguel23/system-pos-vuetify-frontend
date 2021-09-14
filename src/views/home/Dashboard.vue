@@ -1,31 +1,6 @@
 <template>
   <v-container class="ma-0 pa-0" fluid>
-    <v-system-bar window app class="systembar">
-      <div class="d-flex align-center">
-        <div>
-          <v-img
-            width="19"
-            height="19"
-            lazy-src="@/assets/avatars/150-2.jpg"
-            src="@/assets/avatars/150-2.jpg"
-          ></v-img>
-        </div>
-        <div class="mx-2 grey--text text--lighten-2 font-weight-normal">
-          Auto Repuestos
-        </div>
-      </div>
-      <v-spacer></v-spacer>
-
-      <v-btn class="d-flex align-center pl-2 mx-1" small tile icon>
-        <v-icon class="white--text">mdi-minus</v-icon>
-      </v-btn>
-      <v-btn class="d-flex align-center pl-2 mx-1" small tile icon>
-        <v-icon class="white--text">mdi-checkbox-blank-outline</v-icon>
-      </v-btn>
-      <v-btn class="d-flex align-center pl-2 mx-1" small tile icon>
-        <v-icon class="white--text">mdi-close</v-icon>
-      </v-btn>
-    </v-system-bar>
+    <!-- <v-sistem-bar title="Auto Repuestos" img="@/assets/logo/logo_25px.png" /> -->
     <v-navigation-drawer :mini-variant="mini" permanent app>
       <v-list-item class="px-2">
         <v-list-item-avatar rounded size="40" elevation="5">
@@ -156,6 +131,9 @@
 <script>
 export default {
   name: "Dashboard",
+  components: {
+    // VSistemBar: () => import("@/components/SistemBarComponent.vue"),
+  },
   data: () => ({
     mini: false,
     breadcrumbs: [
@@ -191,11 +169,11 @@ export default {
         text: "Productos",
         route: "/dashboard/product",
       },
-      {
-        icon: "mdi-table-star",
-        text: "Categorias",
-        route: "/dashboard/categories",
-      },
+      // {
+      //   icon: "mdi-table-star",
+      //   text: "Categorias",
+      //   route: "/dashboard/categories",
+      // },
       // {
       //   iconUp: "mdi-chevron-up",
       //   iconDown: "mdi-chevron-down",
@@ -243,8 +221,20 @@ export default {
   }),
   methods: {
     logout() {
-      localStorage.removeItem("Authorization");
-      this.$router.push("/auth");
+      this.$swal
+        .fire({
+          title: "Esta seguro que quiere salir?",
+          // showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: "Si",
+          allowOutsideClick: false,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("Authorization");
+            this.$router.push("/auth");
+          }
+        });
     },
     onScroll(e) {
       if (typeof window === "undefined") return;
