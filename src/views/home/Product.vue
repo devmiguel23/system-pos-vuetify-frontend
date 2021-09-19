@@ -134,17 +134,17 @@
                       </v-col>
                       <v-col cols="12" sm="8" md="8" lg="8" xl="8">
                         <label class="font-weight-bold" for=""
-                          >Descripción <span class="error--text">*</span></label
+                          >Nombre <span class="error--text">*</span></label
                         >
                         <v-text-field
                           solo
                           required
-                          v-model="editedItem.description"
-                          :hide-details="hideDetails(descriptionErrors.length)"
-                          :error-messages="descriptionErrors"
-                          @input="$v.editedItem.description.$touch()"
-                          @blur="$v.editedItem.description.$touch()"
-                          label="Descripción"
+                          v-model="editedItem.name"
+                          :hide-details="hideDetails(nameErrors.length)"
+                          :error-messages="nameErrors"
+                          @input="$v.editedItem.name.$touch()"
+                          @blur="$v.editedItem.name.$touch()"
+                          label="Nombre"
                           type="text"
                         ></v-text-field>
                       </v-col>
@@ -183,28 +183,30 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="4" md="4" lg="4" xl="4">
-                        <label class="font-weight-bold" for="">Stock</label>
+                        <label class="font-weight-bold" for="">StockMin</label>
                         <v-text-field
                           solo
-                          v-model="editedItem.stock"
-                          :hide-details="hideDetails(stockErrors.length)"
-                          :error-messages="stockErrors"
-                          @input="$v.editedItem.stock.$touch()"
-                          @blur="$v.editedItem.stock.$touch()"
-                          label="Stock"
+                          v-model="editedItem.stockmin"
+                          :hide-details="hideDetails(stockminErrors.length)"
+                          :error-messages="stockminErrors"
+                          @input="$v.editedItem.stockmin.$touch()"
+                          @blur="$v.editedItem.stockmin.$touch()"
+                          label="Stock min."
                           type="number"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="4" md="4" lg="4" xl="4">
                         <label class="font-weight-bold" for="">Categoria</label>
                         <v-select
+                          clearable
                           solo
-                          v-model="editedItem.category"
+                          v-model="editedItem.idcategory"
                           :items="itemsCategory"
                           item-text="name"
                           item-value="_id"
                           label="Categoria"
                           hide-details
+                          no-data-text="No hay Categorias"
                         ></v-select>
                       </v-col>
                     </v-row>
@@ -252,7 +254,13 @@
         <template v-slot:[`item.options`]="{ item }">
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon v-bind="attrs" v-on="on" small class="mr-2">
+              <v-icon
+                color="success"
+                v-bind="attrs"
+                v-on="on"
+                small
+                class="mr-2"
+              >
                 mdi-chart-areaspline
               </v-icon>
             </template>
@@ -261,6 +269,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-icon
+                color="info"
                 v-bind="attrs"
                 v-on="on"
                 small
@@ -274,7 +283,13 @@
           </v-tooltip>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon v-bind="attrs" v-on="on" small @click="deleteItem(item)">
+              <v-icon
+                color="error"
+                v-bind="attrs"
+                v-on="on"
+                small
+                @click="deleteItem(item)"
+              >
                 mdi-delete
               </v-icon>
             </template>
@@ -282,7 +297,9 @@
           </v-tooltip>
         </template>
         <template v-slot:no-data>
-          <v-btn color="primary" @click="getProducts"> Actualizar </v-btn>
+          <v-btn color="tertiary white--text" @click="getProducts">
+            Actualizar
+          </v-btn>
         </template>
         <template v-slot:no-results> Lo que esta buscando no aparece </template>
       </v-data-table>
@@ -290,7 +307,7 @@
   </v-container>
 </template>
 <script>
-import moment from "moment";
+// import moment from "moment";
 import { validationMixin } from "vuelidate";
 import {
   required,
@@ -309,7 +326,7 @@ export default {
         required,
         decimal,
       },
-      description: {
+      name: {
         required,
         alpha,
         maxLength: maxLength(100),
@@ -325,7 +342,7 @@ export default {
         maxLength: maxLength(25),
         minLength: minLength(1),
       },
-      stock: {
+      stockmin: {
         decimal,
       },
     },
@@ -347,15 +364,14 @@ export default {
         align: "start",
         value: "barcode",
       },
-      { text: "Descripción", sortable: true, value: "description" },
+      { text: "Descripción", sortable: true, value: "name" },
       { text: "Referencia", value: "referencelarge" },
       { text: "Ref Corta", value: "referencesmall" },
-      { text: "Categoria", value: "category" },
+      { text: "Categoria", value: "categoryname" },
+      { text: "Stock min.", value: "stockmin" },
       { text: "Compra", value: "buy" },
       { text: "Venta", value: "sale" },
       { text: "Stock", value: "stock" },
-      { text: "Existencia", value: "existence" },
-      // { text: "Fecha de Creacion", value: "createdDate" },
       { text: "Opciones", align: "end", value: "options", sortable: false },
     ],
     inputBarCode: false,
@@ -365,19 +381,21 @@ export default {
     editedIndex: -1,
     editedItem: {
       barcode: null,
-      description: null,
+      name: null,
       referencelarge: null,
       referencesmall: null,
-      stock: 0,
-      category: null,
+      stockmin: 0,
+      idcategory: null,
+      categoryname: null,
     },
     defaultItem: {
       barcode: null,
-      description: null,
+      name: null,
       referencelarge: null,
       referencesmall: null,
-      stock: 0,
-      category: null,
+      stockmin: 0,
+      idcategory: null,
+      categoryname: null,
     },
   }),
   watch: {
@@ -456,11 +474,21 @@ export default {
               text: "La sesion expiro, debe iniciar sesión otra vez.",
             });
           } else {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
+            err.response.status == 500
+              ? this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                })
+              : this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: err.response.data.message,
+                });
           }
         });
     },
@@ -472,10 +500,7 @@ export default {
         await this.axios
           .post("/product", data)
           .then((res) => {
-            res.data.forEach((e) => {
-              e.createdDate = moment(e.createdDate).format("yyyy-MM-DD");
-              this.products.push(e);
-            });
+            this.products.push(res.data);
             this.close();
           })
           .catch((err) => {
@@ -486,11 +511,21 @@ export default {
                 text: "La sesion expiro, debe iniciar sesión otra vez.",
               });
             } else {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.message,
-              });
+              err.response.status == 500
+                ? this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                  })
+                : this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: err.response.data.message,
+                  });
             }
           });
       }
@@ -500,6 +535,7 @@ export default {
       this.btnLoading = true;
       this.$v.$touch();
       if (!this.$v.$invalid) {
+        if (data.idcategory == null) data.categoryname = null;
         await this.axios
           .put(`/product/${data._id}`, data)
           .then((res) => {
@@ -514,11 +550,21 @@ export default {
                 text: "La sesion expiro, debe iniciar sesión otra vez.",
               });
             } else {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.message,
-              });
+              err.response.status == 500
+                ? this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                  })
+                : this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: err.response.data.message,
+                  });
             }
           });
       }
@@ -540,11 +586,21 @@ export default {
               text: "La sesion expiro, debe iniciar sesión otra vez.",
             });
           } else {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
+            err.response.status == 500
+              ? this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                })
+              : this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: err.response.data.message,
+                });
           }
         });
     },
@@ -553,10 +609,10 @@ export default {
     },
   },
   computed: {
-    stockErrors() {
+    stockminErrors() {
       const errors = [];
-      if (!this.$v.editedItem.stock.$dirty) return errors;
-      !this.$v.editedItem.stock.decimal &&
+      if (!this.$v.editedItem.stockmin.$dirty) return errors;
+      !this.$v.editedItem.stockmin.decimal &&
         errors.push("El codigo de barra solo permite numeros.");
       return errors;
     },
@@ -582,16 +638,16 @@ export default {
         errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },
-    descriptionErrors() {
+    nameErrors() {
       const errors = [];
-      if (!this.$v.editedItem.description.$dirty) return errors;
-      !this.$v.editedItem.description.required &&
-        errors.push("La descripcion es requerido.");
-      !this.$v.editedItem.description.maxLength &&
-        errors.push("La descripcion debe tener 100 caracteres como máximo.");
-      !this.$v.editedItem.description.minLength &&
-        errors.push("La descripcion debe tener 1 caracteres como minimo.");
-      !this.$v.editedItem.description.alpha &&
+      if (!this.$v.editedItem.name.$dirty) return errors;
+      !this.$v.editedItem.name.required &&
+        errors.push("El nombre es requerido.");
+      !this.$v.editedItem.name.maxLength &&
+        errors.push("El nombre debe tener 100 caracteres como máximo.");
+      !this.$v.editedItem.name.minLength &&
+        errors.push("El nombre debe tener 1 caracteres como minimo.");
+      !this.$v.editedItem.name.alpha &&
         errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },

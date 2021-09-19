@@ -11,7 +11,9 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 Vue.config.productionTip = false
 
+// axios.defaults.baseURL = "https://possistem-backend.herokuapp.com/api"
 axios.defaults.baseURL = "http://localhost:4000/api"
+
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('Authorization');
 
 Vue.use(VueAxios, axios)

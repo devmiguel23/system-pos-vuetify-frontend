@@ -1,6 +1,6 @@
 <template>
   <v-container class="ma-0 pa-0" fluid>
-    <!-- <v-sistem-bar title="Auto Repuestos" img="@/assets/logo/logo_25px.png" /> -->
+    <!-- <v-sistem-bar title="Auto Repuestos" /> -->
     <v-navigation-drawer :mini-variant="mini" permanent app>
       <v-list-item class="px-2">
         <v-list-item-avatar rounded size="40" elevation="5">
@@ -98,7 +98,7 @@
       </v-tooltip>
     </v-app-bar>
     <v-main class="scroll-y">
-      <v-card elevation="4" class="ma-2">
+      <!-- <v-card elevation="4" class="ma-2">
         <div class="mx-4 d-flex justify-start align-center">
           <h3>DASHBOARD</h3>
           <v-divider vertical class="mx-2"></v-divider>
@@ -108,7 +108,7 @@
             divider="/"
           ></v-breadcrumbs>
         </div>
-      </v-card>
+      </v-card> -->
       <v-container fluid>
         <router-view />
       </v-container>
@@ -117,7 +117,7 @@
       small
       v-scroll="onScroll"
       bottom
-      color="primary"
+      color="tertiary"
       dark
       fab
       fixed
@@ -136,13 +136,13 @@ export default {
   },
   data: () => ({
     mini: false,
-    breadcrumbs: [
-      {
-        text: "Productos",
-        disabled: true,
-        href: "breadcrumbs_dashboard",
-      },
-    ],
+    // breadcrumbs: [
+    //   {
+    //     text: "Productos",
+    //     disabled: true,
+    //     href: "breadcrumbs_dashboard",
+    //   },
+    // ],
     items: [
       {
         icon: "mdi-view-dashboard",
@@ -223,7 +223,7 @@ export default {
     logout() {
       this.$swal
         .fire({
-          title: "Esta seguro que quiere salir?",
+          title: "Esta seguro que quiere cerrar session?",
           // showDenyButton: true,
           showCancelButton: true,
           confirmButtonText: "Si",
@@ -231,7 +231,8 @@ export default {
         })
         .then((result) => {
           if (result.isConfirmed) {
-            localStorage.removeItem("Authorization");
+            // localStorage.removeItem("Authorization");
+            localStorage.clear();
             this.$router.push("/auth");
           }
         });

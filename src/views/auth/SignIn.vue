@@ -41,7 +41,7 @@
         <div class="mt-4 d-flex justify-space-between align-center">
           <v-checkbox
             class="ma-0 pa-0"
-            color="secondary"
+            color="primary"
             label="Recuérdame"
           ></v-checkbox>
         </div>
@@ -49,7 +49,7 @@
           :disabled="$v.$invalid"
           type="submit"
           block
-          color="primary"
+          color="tertiary white--text"
           elevation="2"
           large
           :loading="btnLoading"
@@ -111,12 +111,13 @@ export default {
               "Bearer " + localStorage.getItem("Authorization");
             Object.assign(this.form, this.defaultform);
             this.$v.$reset();
-            setTimeout(() => {
-              this.loadingCard = false;
-              this.$router.push("/dashboard");
-            }, 1000);
+            this.loadingCard = false;
+            this.$router.push("/dashboard");
+            // setTimeout(() => {
+            // }, 1000);
           })
           .catch((err) => {
+            this.loadingCard = false;
             this.$swal({
               icon: "error",
               title: "Oops...",

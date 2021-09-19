@@ -16,15 +16,15 @@ const routes = [
   //Errors
   {
     path: "*",
-    name: "Error",
-    component: () => import("@/errors/Error_404.vue"),
-    meta: {
-      title: "Pagina no encontrada",
-      requiresAuth: false,
-    },
+    redirect: { name: "Dashboard" },
+    // name: "Error",
+    // component: () => import("@/errors/Error_404.vue"),
+    // meta: {
+    //   title: "Pagina no encontrada",
+    //   requiresAuth: false,
+    // },
   },
   //authentication
-  //dashboard
   {
     path: "/auth",
     name: "Auth",
@@ -99,25 +99,7 @@ const routes = [
           title: "Productos",
           requiresAuth: true,
         },
-      },
-      {
-        path: "/dashboard/categories",
-        name: "Dashboard-Categories",
-        component: () => import("@/views/home/Categories.vue"),
-        meta: {
-          title: "Categorias",
-          requiresAuth: true,
-        },
-      },
-      {
-        path: "/dashboard/addproducts",
-        name: "Dashboard-AddProduct",
-        component: () => import("@/views/home/AddProduct.vue"),
-        meta: {
-          title: "Entradas al Almacen",
-          requiresAuth: true,
-        },
-      },
+      }
     ],
   },
 ];

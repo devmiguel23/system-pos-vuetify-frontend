@@ -3,6 +3,8 @@
 import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import { autoUpdater } from "electron-updater"
+import path from "path";
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -19,16 +21,15 @@ async function createWindow() {
     height: 800,
     minWidth: 800,
     minHeight: 600,
+    icon: path.join(__dirname, '../public/favicon.ico'),
+    // icon: __dirname + '/favicon.ico',
     titleBarStyle: 'hiddenInset',
     frame: false,
     webPreferences: {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: false
-      // contextIsolation: false,
-      // nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
     }
   })
-
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -37,7 +38,7 @@ async function createWindow() {
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    win.loadURL('app://./index.html');
   }
 
   ipcMain.on('MinimizeWindows', () => {
@@ -52,6 +53,21 @@ async function createWindow() {
     app.exit(0)
   });
 
+  ipcMain.on('restart_app', () => {
+    autoUpdater.quitAndInstall();
+  });
+
+  win.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+
+  autoUpdater.on('update-available', () => {
+    win.webContents.send('update_available');
+  });
+
+  autoUpdater.on('update-downloaded', () => {
+    win.webContents.send('update_downloaded');
+  });
 
 }
 
@@ -84,6 +100,11 @@ app.on('ready', async () => {
   }
   createWindow()
 })
+
+//version
+ipcMain.on('app_version', (event) => {
+  event.sender.send('app_version', { version: app.getVersion() });
+});
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

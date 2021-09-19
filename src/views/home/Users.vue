@@ -300,6 +300,7 @@
                           dense
                           v-model="selected"
                           :value="item.upgrade"
+                          color="tertiary"
                         ></v-checkbox>
                       </template>
                       <template v-slot:[`item.permission`]="{ item }">
@@ -311,7 +312,10 @@
                         <v-icon v-else class="error--text">mdi-cancel</v-icon>
                       </template>
                       <template v-slot:no-data>
-                        <v-btn color="primary" @click="getPermission">
+                        <v-btn
+                          color="tertiary white--text"
+                          @click="getPermission"
+                        >
                           Actualizar
                         </v-btn>
                       </template>
@@ -329,11 +333,12 @@
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-icon
+                color="success"
                 v-bind="attrs"
                 v-on="on"
                 small
-                class="mr-2 success--text"
                 @click="permission(item)"
+                class="mr-2"
               >
                 mdi-shield-key
               </v-icon>
@@ -343,6 +348,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-icon
+                color="info"
                 v-bind="attrs"
                 v-on="on"
                 small
@@ -356,7 +362,13 @@
           </v-tooltip>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon v-bind="attrs" v-on="on" small @click="deleteItem(item)">
+              <v-icon
+                color="error"
+                v-bind="attrs"
+                v-on="on"
+                small
+                @click="deleteItem(item)"
+              >
                 mdi-delete
               </v-icon>
             </template>

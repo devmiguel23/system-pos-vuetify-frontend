@@ -232,11 +232,11 @@
                           type="text"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                      <v-col cols="12" sm="12" md="12" lg="12" xl="12">
                         <label class="font-weight-bold" for=""
                           >Descripcion</label
                         >
-                        <v-text-field
+                        <v-textarea
                           solo
                           v-model="editedItem.description"
                           :hide-details="hideDetails(descriptionErrors.length)"
@@ -245,7 +245,7 @@
                           @blur="$v.editedItem.description.$touch()"
                           label="Descripcion"
                           type="text"
-                        ></v-text-field>
+                        ></v-textarea>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -290,6 +290,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-icon
+                color="info"
                 v-bind="attrs"
                 v-on="on"
                 small
@@ -303,7 +304,13 @@
           </v-tooltip>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon v-bind="attrs" v-on="on" small @click="deleteItem(item)">
+              <v-icon
+                color="error"
+                v-bind="attrs"
+                v-on="on"
+                small
+                @click="deleteItem(item)"
+              >
                 mdi-delete
               </v-icon>
             </template>
@@ -311,7 +318,9 @@
           </v-tooltip>
         </template>
         <template v-slot:no-data>
-          <v-btn color="primary" @click="getClients"> Actualizar </v-btn>
+          <v-btn color="tertiary white--text" @click="getClients">
+            Actualizar
+          </v-btn>
         </template>
         <template v-slot:no-results> Lo que esta buscando no aparece </template>
       </v-data-table>
@@ -375,7 +384,6 @@ export default {
       {
         text: "Nombre",
         align: "start",
-        sortable: true,
         value: "fullname",
       },
       { text: "RNC", value: "rnc" },
@@ -402,7 +410,9 @@ export default {
       email: null,
       phone1: null,
       phone2: null,
-      dateofbirth: null,
+      dateofbirth: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+        .toISOString()
+        .substr(0, 10),
       address: null,
     },
     defaultItem: {
@@ -413,7 +423,9 @@ export default {
       email: null,
       phone1: null,
       phone2: null,
-      dateofbirth: null,
+      dateofbirth: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+        .toISOString()
+        .substr(0, 10),
       address: null,
     },
   }),
@@ -487,11 +499,21 @@ export default {
               text: "La sesion expiro, debe iniciar sesión otra vez.",
             });
           } else {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.msg,
-            });
+            err.response.status == 500
+              ? this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                })
+              : this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: err.response.data.message,
+                });
           }
         });
     },
@@ -519,11 +541,21 @@ export default {
                 text: "La sesion expiro, debe iniciar sesión otra vez.",
               });
             } else {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.message,
-              });
+              err.response.status == 500
+                ? this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                  })
+                : this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: err.response.data.message,
+                  });
             }
           });
       }
@@ -536,7 +568,11 @@ export default {
         await this.axios
           .put(`/client/${data._id}`, data)
           .then((res) => {
-            Object.assign(this.clients[this.editedIndex], res.data.item);
+            [res.data.item].forEach((e) => {
+              e.dateofbirth = moment(e.dateofbirth).format("yyyy-MM-DD");
+              console.log(e);
+              Object.assign(this.clients[this.editedIndex], e);
+            });
             this.close();
           })
           .catch((err) => {
@@ -547,11 +583,21 @@ export default {
                 text: "La sesion expiro, debe iniciar sesión otra vez.",
               });
             } else {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.message,
-              });
+              err.response.status == 500
+                ? this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                  })
+                : this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: err.response.data.message,
+                  });
             }
           });
       }
@@ -574,11 +620,21 @@ export default {
               text: "La sesion expiro, debe iniciar sesión otra vez.",
             });
           } else {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
+            err.response.status == 500
+              ? this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                })
+              : this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: err.response.data.message,
+                });
           }
         });
     },

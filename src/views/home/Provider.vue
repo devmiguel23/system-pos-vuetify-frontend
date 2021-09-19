@@ -165,7 +165,7 @@
                           type="text"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                      <v-col cols="12" sm="6" md="6" lg="6" xl="6">
                         <label class="font-weight-bold" for="">Direccion</label>
                         <v-text-field
                           solo
@@ -178,20 +178,20 @@
                           type="text"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" sm="3" md="3" lg="3" xl="3">
+                      <v-col cols="12" sm="12" md="12" lg="12" xl="12">
                         <label class="font-weight-bold" for=""
                           >Descripcion</label
                         >
-                        <v-text-field
-                          solo
-                          v-model="editedItem.description"
+                        <v-textarea
                           :hide-details="hideDetails(descriptionErrors.length)"
                           :error-messages="descriptionErrors"
                           @input="$v.editedItem.description.$touch()"
                           @blur="$v.editedItem.description.$touch()"
-                          label="Descripcion"
+                          v-model="editedItem.description"
+                          solo
+                          label="Descripciona"
                           type="text"
-                        ></v-text-field>
+                        ></v-textarea>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -235,6 +235,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-icon
+                color="info"
                 v-bind="attrs"
                 v-on="on"
                 small
@@ -248,7 +249,13 @@
           </v-tooltip>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon v-bind="attrs" v-on="on" small @click="deleteItem(item)">
+              <v-icon
+                color="error"
+                v-bind="attrs"
+                v-on="on"
+                small
+                @click="deleteItem(item)"
+              >
                 mdi-delete
               </v-icon>
             </template>
@@ -256,7 +263,9 @@
           </v-tooltip>
         </template>
         <template v-slot:no-data>
-          <v-btn color="primary" @click="getProviders"> Actualizar </v-btn>
+          <v-btn color="tertiary white--text" @click="getProviders">
+            Actualizar
+          </v-btn>
         </template>
         <template v-slot:no-results> Lo que esta buscando no aparece </template>
       </v-data-table>
@@ -428,11 +437,21 @@ export default {
               text: "La sesion expiro, debe iniciar sesión otra vez.",
             });
           } else {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
+            err.response.status == 500
+              ? this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                })
+              : this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: err.response.data.message,
+                });
           }
         });
     },
@@ -459,11 +478,21 @@ export default {
                 text: "La sesion expiro, debe iniciar sesión otra vez.",
               });
             } else {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.message,
-              });
+              err.response.status == 500
+                ? this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                  })
+                : this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: err.response.data.message,
+                  });
             }
           });
       }
@@ -487,11 +516,21 @@ export default {
                 text: "La sesion expiro, debe iniciar sesión otra vez.",
               });
             } else {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.message,
-              });
+              err.response.status == 500
+                ? this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                  })
+                : this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: err.response.data.message,
+                  });
             }
           });
       }
@@ -513,11 +552,21 @@ export default {
               text: "La sesion expiro, debe iniciar sesión otra vez.",
             });
           } else {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
+            err.response.status == 500
+              ? this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                })
+              : this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: err.response.data.message,
+                });
           }
         });
     },
