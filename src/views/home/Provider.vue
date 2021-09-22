@@ -108,7 +108,8 @@
                           :error-messages="rncErrors"
                           @input="$v.editedItem.rnc.$touch()"
                           @blur="$v.editedItem.rnc.$touch()"
-                          label="RNC"
+                          v-mask="'###-###-###'"
+                          label="999-999-999"
                           type="text"
                         ></v-text-field>
                       </v-col>
@@ -121,7 +122,8 @@
                           :error-messages="aidErrors"
                           @input="$v.editedItem.aid.$touch()"
                           @blur="$v.editedItem.aid.$touch()"
-                          label="Cedula"
+                          v-mask="'###-#######-#'"
+                          label="999-9999999-9"
                           type="text"
                         ></v-text-field>
                       </v-col>
@@ -148,8 +150,9 @@
                           :error-messages="phone1Errors"
                           @input="$v.editedItem.phone1.$touch()"
                           @blur="$v.editedItem.phone1.$touch()"
-                          label="Telefono"
-                          type="text"
+                          v-mask="'(###) ###-####'"
+                          label="(999)-999-9999"
+                          type="tel"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="3" md="3" lg="3" xl="3">
@@ -161,8 +164,9 @@
                           :error-messages="phone2Errors"
                           @input="$v.editedItem.phone2.$touch()"
                           @blur="$v.editedItem.phone2.$touch()"
-                          label="Cedula"
-                          type="text"
+                          v-mask="'(###) ###-####'"
+                          label="(999)-999-9999"
+                          type="tel"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6" lg="6" xl="6">
@@ -280,9 +284,9 @@ import {
   maxLength,
   minLength,
   email,
-  helpers,
+  // helpers,
 } from "vuelidate/lib/validators";
-const alpha = helpers.regex("alpha", /^[a-zA-Z-0-9- ]*$/);
+// const alpha = helpers.regex("alpha", /^[a-zA-Z-0-9- ]*$/);
 
 export default {
   mixins: [validationMixin],
@@ -292,7 +296,6 @@ export default {
         required,
         maxLength: maxLength(100),
         minLength: minLength(1),
-        alpha,
       },
       rnc: {
         maxLength: maxLength(25),
@@ -338,7 +341,7 @@ export default {
       { text: "Telefono", value: "phone1" },
       { text: "Telefono 2", value: "phone2" },
       { text: "Direccion", value: "address" },
-      { text: "Descripción", value: "description" },
+      // { text: "Descripción", value: "description" },
       // { text: "Fecha de Creacion", value: "createdDate" },
       { text: "Opciones", align: "end", value: "options", sortable: false },
     ],
@@ -412,8 +415,10 @@ export default {
       });
     },
     save() {
-      if (this.editedIndex > -1) this.updateProvider(this.editedItem);
-      else this.createProvider(this.editedItem);
+      if (!this.$v.$invalid) {
+        if (this.editedIndex > -1) this.updateProvider(this.editedItem);
+        else this.createProvider(this.editedItem);
+      }
     },
 
     async getProviders() {
@@ -430,6 +435,8 @@ export default {
           this.tableLoading = false;
         })
         .catch((err) => {
+          this.tableLoading = false;
+          this.btnLoading = false;
           if (err.response.status == 401) {
             this.$swal({
               icon: "error",
@@ -471,6 +478,8 @@ export default {
             this.close();
           })
           .catch((err) => {
+            this.tableLoading = false;
+            this.btnLoading = false;
             if (err.response.status == 401) {
               this.$swal({
                 icon: "error",
@@ -509,6 +518,8 @@ export default {
             this.close();
           })
           .catch((err) => {
+            this.tableLoading = false;
+            this.btnLoading = false;
             if (err.response.status == 401) {
               this.$swal({
                 icon: "error",
@@ -545,6 +556,8 @@ export default {
           this.closeDelete();
         })
         .catch((err) => {
+          this.tableLoading = false;
+          this.btnDLoading = false;
           if (err.response.status == 401) {
             this.$swal({
               icon: "error",
@@ -580,8 +593,6 @@ export default {
       if (!this.$v.editedItem.address.$dirty) return errors;
       !this.$v.editedItem.address.maxLength &&
         errors.push("La direccion debe tener 100 caracteres como máximo.");
-      // !this.$v.editedItem.address.alpha &&
-      //   errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },
     phone2Errors() {
@@ -623,8 +634,6 @@ export default {
       if (!this.$v.editedItem.description.$dirty) return errors;
       !this.$v.editedItem.description.maxLength &&
         errors.push("La descripcion debe tener 100 caracteres como máximo.");
-      // !this.$v.editedItem.description.alpha &&
-      //   errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },
     namecompanyErrors() {
@@ -636,8 +645,6 @@ export default {
         errors.push("El nombre debe tener 100 caracteres como máximo.");
       !this.$v.editedItem.namecompany.minLength &&
         errors.push("El nombre debe tener 1 caracteres como minimo.");
-      !this.$v.editedItem.namecompany.alpha &&
-        errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },
     formTitle() {

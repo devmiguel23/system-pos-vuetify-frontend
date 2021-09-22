@@ -2,13 +2,22 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        publish: ['github'],
-
-        productName: "Auto Repuestos",
         appId: 'arpos.com',
+        productName: "Auto Repuestos",
+        publish: ['github'],
+        publish: [
+          {
+            provider: "github",
+            owner: "devmiguel23",
+            repo: "system-pos-vuetify-frontend"
+          }
+        ],
         win: {
+          "publish": [
+            "github"
+          ],
           target: [
-            "nsis"
+            "nsis",
           ],
           icon: 'public/favicon.ico',
           requestedExecutionLevel: "requireAdministrator"

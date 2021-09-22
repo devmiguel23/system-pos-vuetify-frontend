@@ -5,7 +5,7 @@
         :headers="headers"
         :items="products"
         item-key="id"
-        :sort-by="['description']"
+        :sort-by="['name']"
         :sort-desc="[false, true]"
         multi-sort
         :search="search"
@@ -109,10 +109,10 @@
                       </v-col>
                       <v-col
                         cols="12"
-                        sm="2"
-                        md="2"
-                        lg="2"
-                        xl="2"
+                        sm="3"
+                        md="3"
+                        lg="3"
+                        xl="3"
                         v-if="editedIndex === -1"
                       >
                         <label class="font-weight-bold" for=""
@@ -128,11 +128,12 @@
                           :error-messages="barcodeErrors"
                           @input="$v.editedItem.barcode.$touch()"
                           @blur="$v.editedItem.barcode.$touch()"
-                          label="#*****"
+                          label="9999999999999"
+                          v-mask="'#############'"
                           type="number"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" sm="8" md="8" lg="8" xl="8">
+                      <v-col cols="12" sm="7" md="7" lg="7" xl="7">
                         <label class="font-weight-bold" for=""
                           >Nombre <span class="error--text">*</span></label
                         >
@@ -144,7 +145,7 @@
                           :error-messages="nameErrors"
                           @input="$v.editedItem.name.$touch()"
                           @blur="$v.editedItem.name.$touch()"
-                          label="Nombre"
+                          label="Nombre del producto"
                           type="text"
                         ></v-text-field>
                       </v-col>
@@ -214,7 +215,7 @@
                 </v-card-text>
               </v-card>
             </v-dialog>
-            <product-component @onEventCagetory="onCategory" />
+            <category-component @onEventCagetory="onCategory" />
             <!-- FIN DIALOG PRODUCTO -->
             <!-- DIALOG DELETE  -->
             <v-dialog
@@ -349,7 +350,8 @@ export default {
   },
   name: "Dashboard-Product",
   components: {
-    ProductComponent: () => import("@/components/product/ProductComponent.vue"),
+    CategoryComponent: () =>
+      import("@/components/product/CategoryComponent.vue"),
   },
   data: () => ({
     selectBoxCategory: null,
@@ -453,8 +455,10 @@ export default {
       });
     },
     save() {
-      if (this.editedIndex > -1) this.updateProduct(this.editedItem);
-      else this.createProduct(this.editedItem);
+      if (!this.$v.$invalid) {
+        if (this.editedIndex > -1) this.updateProduct(this.editedItem);
+        else this.createProduct(this.editedItem);
+      }
     },
 
     async getProducts() {

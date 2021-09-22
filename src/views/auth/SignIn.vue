@@ -19,6 +19,7 @@
           @blur="$v.form.username.$touch()"
           class="mb-3"
           type="text"
+          v-mask="'NNNNNNNNNNNNNNNNNNNNNNNNN'"
           label="Nombre de Usuario"
           solo
         ></v-text-field>
@@ -36,6 +37,7 @@
           :type="eyeShow ? 'text' : 'password'"
           @click:append="eyeShow = !eyeShow"
           solo
+          v-mask="'NNNNNNNNNNNNNNNNNNNNNNNNN'"
           label="Contraseña"
         ></v-text-field>
         <div class="mt-4 d-flex justify-space-between align-center">
@@ -106,7 +108,9 @@ export default {
         await this.axios
           .post("/signin", this.form)
           .then((res) => {
+            console.log(res.data.user);
             localStorage.setItem("Authorization", res.data.token);
+            localStorage.setItem("User", JSON.stringify(res.data.user));
             this.axios.defaults.headers.common["Authorization"] =
               "Bearer " + localStorage.getItem("Authorization");
             Object.assign(this.form, this.defaultform);

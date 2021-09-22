@@ -39,6 +39,7 @@ async function createWindow() {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html');
+    autoUpdater.checkForUpdatesAndNotify();
   }
 
   ipcMain.on('MinimizeWindows', () => {
@@ -53,21 +54,21 @@ async function createWindow() {
     app.exit(0)
   });
 
-  ipcMain.on('restart_app', () => {
-    autoUpdater.quitAndInstall();
-  });
+  // ipcMain.on('restart_app', () => {
+  //   autoUpdater.quitAndInstall();
+  // });
 
-  win.once('ready-to-show', () => {
-    autoUpdater.checkForUpdatesAndNotify();
-  });
+  // win.once('ready-to-show', () => {
+  //   autoUpdater.checkForUpdatesAndNotify();
+  // });
 
-  autoUpdater.on('update-available', () => {
-    win.webContents.send('update_available');
-  });
+  // autoUpdater.on('update-available', () => {
+  //   win.webContents.send('update_available');
+  // });
 
-  autoUpdater.on('update-downloaded', () => {
-    win.webContents.send('update_downloaded');
-  });
+  // autoUpdater.on('update-downloaded', () => {
+  //   win.webContents.send('update_downloaded');
+  // });
 
 }
 

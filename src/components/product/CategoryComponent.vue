@@ -255,7 +255,7 @@ export default {
       },
     },
   },
-  name: "Dashboard-Product-Component",
+  name: "Dashboard-Category-Component",
   data: () => ({
     search: null,
     tableLoading: false,
@@ -392,6 +392,9 @@ export default {
             this.close();
           })
           .catch((err) => {
+            this.tableLoading = false;
+            this.btnLoading = false;
+            this.btnDLoading = false;
             if (err.response.status == 401) {
               this.$swal({
                 icon: "error",
@@ -430,6 +433,9 @@ export default {
             this.close();
           })
           .catch((err) => {
+            this.tableLoading = false;
+            this.btnLoading = false;
+            this.btnDLoading = false;
             if (err.response.status == 401) {
               this.$swal({
                 icon: "error",
@@ -466,6 +472,9 @@ export default {
           this.closeDelete();
         })
         .catch((err) => {
+          this.tableLoading = false;
+          this.btnLoading = false;
+          this.btnDLoading = false;
           if (err.response.status == 401) {
             this.$swal({
               icon: "error",

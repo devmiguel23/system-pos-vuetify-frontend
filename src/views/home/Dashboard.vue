@@ -1,21 +1,30 @@
 <template>
   <v-container class="ma-0 pa-0" fluid>
-    <!-- <v-sistem-bar title="Auto Repuestos" /> -->
+    <v-sistem-bar title="Auto Repuestos" />
     <v-navigation-drawer :mini-variant="mini" permanent app>
       <v-list-item class="px-2">
         <v-list-item-avatar rounded size="40" elevation="5">
-          <v-img
+          <v-avatar
+            color="tertiary  white--text"
+            rounded
+            size="40"
+            v-text="user.fullname.substr(0, 1)"
+            class="font-weight-bold headline"
+            style="text-transform: uppercase"
+          ></v-avatar>
+          <!-- <v-img
             contain
             lazy-src="@/assets/avatars/150-2.jpg"
             src="@/assets/avatars/150-2.jpg"
             class="mx-auto"
-          />
+          /> -->
         </v-list-item-avatar>
         <div class="d-flex flex-column">
-          <v-list-item-title class="text-capitalize font-weight-medium"
-            >Miguel De Jesus</v-list-item-title
-          >
-          <v-list-item-subtitle>hdjhaker</v-list-item-subtitle>
+          <v-list-item-title
+            class="text-capitalize font-weight-medium"
+            v-text="user.fullname"
+          ></v-list-item-title>
+          <v-list-item-subtitle v-text="user.username"></v-list-item-subtitle>
         </div>
       </v-list-item>
       <v-divider></v-divider>
@@ -132,10 +141,11 @@
 export default {
   name: "Dashboard",
   components: {
-    // VSistemBar: () => import("@/components/SistemBarComponent.vue"),
+    VSistemBar: () => import("@/components/SistemBarComponent.vue"),
   },
   data: () => ({
     mini: false,
+    user: null,
     // breadcrumbs: [
     //   {
     //     text: "Productos",
@@ -219,7 +229,13 @@ export default {
       // },
     ],
   }),
+  created() {
+    this.getUserLocalStorage();
+  },
   methods: {
+    getUserLocalStorage() {
+      this.user = JSON.parse(localStorage.getItem("User"));
+    },
     logout() {
       this.$swal
         .fire({

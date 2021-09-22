@@ -11,7 +11,7 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-    redirect: { name: "Dashboard" },
+    redirect: { name: "Dashboard-Home" },
   },
   //Errors
   {
@@ -50,7 +50,7 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     component: () => import("@/views/home/Dashboard.vue"),
-    redirect: { name: "Dashboard-Product" },
+    redirect: { name: "Dashboard-Home" },
     meta: {
       requiresAuth: true,
     },
@@ -112,9 +112,15 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   if (to.meta.title) window.document.title = to.meta && to.meta.title ? `AUTO REPUESTOS - ${to.meta.title}` : "AUTO REPUESTOS";
   if (to.meta.requiresAuth) {
-    axios.get("/").catch(() => {
-      next("/auth");
-    });
+    axios.get("/")
+      .then(res => {
+        if (!localStorage.getItem('User')) {
+          localStorage.setItem("User", JSON.stringify(res.data.user));
+        }
+      })
+      .catch(() => {
+        next("/auth");
+      });
   }
   next();
 });

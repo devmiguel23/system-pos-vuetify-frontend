@@ -108,7 +108,8 @@
                           :error-messages="rncErrors"
                           @input="$v.editedItem.rnc.$touch()"
                           @blur="$v.editedItem.rnc.$touch()"
-                          label="RNC"
+                          v-mask="'###-###-###'"
+                          label="999-999-999"
                           type="text"
                         ></v-text-field>
                       </v-col>
@@ -121,7 +122,8 @@
                           :error-messages="aidErrors"
                           @input="$v.editedItem.aid.$touch()"
                           @blur="$v.editedItem.aid.$touch()"
-                          label="Cedula"
+                          v-mask="'###-#######-#'"
+                          label="999-9999999-9"
                           type="text"
                         ></v-text-field>
                       </v-col>
@@ -148,8 +150,9 @@
                           :error-messages="phone1Errors"
                           @input="$v.editedItem.phone1.$touch()"
                           @blur="$v.editedItem.phone1.$touch()"
-                          label="Telefono"
-                          type="text"
+                          v-mask="'(###) ###-####'"
+                          label="(999)-999-9999"
+                          type="tel"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="3" md="3" lg="3" xl="3">
@@ -161,8 +164,9 @@
                           :error-messages="phone2Errors"
                           @input="$v.editedItem.phone2.$touch()"
                           @blur="$v.editedItem.phone2.$touch()"
-                          label="Cedula"
-                          type="text"
+                          v-mask="'(###) ###-####'"
+                          label="(999)-999-9999"
+                          type="tel"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="3" md="3" lg="3" xl="3">
@@ -180,15 +184,17 @@
                         >
                           <template v-slot:activator="{ on, attrs }">
                             <v-combobox
+                              v-mask="'####-##-##'"
                               v-model="editedItem.dateofbirth"
-                              label="Fecha de Nacimiento"
-                              prepend-icon="mdi-calendar"
                               readonly
                               v-bind="attrs"
                               v-on="on"
+                              solo
                             ></v-combobox>
                           </template>
                           <v-date-picker
+                            min="1940"
+                            :max="`${new Date().getFullYear() + 1}`"
                             locale="es"
                             v-model="editedItem.dateofbirth"
                             no-title
@@ -207,17 +213,6 @@
                             </v-btn>
                           </v-date-picker>
                         </v-menu>
-
-                        <!-- <v-text-field
-                          solo
-                          v-model="editedItem.dateofbirth"
-                          :hide-details="hideDetails(dateofbirthErrors.length)"
-                          :error-messages="dateofbirthErrors"
-                          @input="$v.editedItem.dateofbirth.$touch()"
-                          @blur="$v.editedItem.dateofbirth.$touch()"
-                          label="Fecha de Nacimiento"
-                          type="text"
-                        ></v-text-field> -->
                       </v-col>
                       <v-col cols="12" sm="3" md="3" lg="3" xl="3">
                         <label class="font-weight-bold" for="">Direccion</label>
@@ -335,9 +330,9 @@ import {
   maxLength,
   minLength,
   email,
-  helpers,
+  // helpers,
 } from "vuelidate/lib/validators";
-const alpha = helpers.regex("alpha", /^[a-zA-Z-0-9- ]*$/);
+// const alpha = helpers.regex("alpha", /^[a-zA-Z-0-9- ]*$/);
 export default {
   mixins: [validationMixin],
   validations: {
@@ -346,7 +341,7 @@ export default {
         required,
         maxLength: maxLength(100),
         minLength: minLength(1),
-        alpha,
+        // alpha,
       },
       rnc: {
         maxLength: maxLength(25),
@@ -393,8 +388,7 @@ export default {
       { text: "Telefono 2", value: "phone2" },
       { text: "Nacimiento", value: "dateofbirth" },
       { text: "Direccion", value: "address" },
-      { text: "Descripción", value: "description" },
-      // { text: "Fecha de Creacion", value: "createdDate" },
+      // { text: "Descripción", value: "description" },
       { text: "Opciones", align: "end", value: "options", sortable: false },
     ],
     clients: [],
@@ -474,8 +468,10 @@ export default {
       });
     },
     save() {
-      if (this.editedIndex > -1) this.updateClient(this.editedItem);
-      else this.createClient(this.editedItem);
+      if (!this.$v.$invalid) {
+        if (this.editedIndex > -1) this.updateClient(this.editedItem);
+        else this.createClient(this.editedItem);
+      }
     },
     async getClients() {
       this.clients = [];
@@ -570,7 +566,6 @@ export default {
           .then((res) => {
             [res.data.item].forEach((e) => {
               e.dateofbirth = moment(e.dateofbirth).format("yyyy-MM-DD");
-              console.log(e);
               Object.assign(this.clients[this.editedIndex], e);
             });
             this.close();
@@ -702,8 +697,8 @@ export default {
         errors.push("El nombre debe tener 100 caracteres como máximo.");
       !this.$v.editedItem.fullname.minLength &&
         errors.push("El nombre debe tener 1 caracteres como minimo.");
-      !this.$v.editedItem.fullname.alpha &&
-        errors.push("Solo es permitido a-z-A-Z-0-9.");
+      // !this.$v.editedItem.fullname.alpha &&
+      //   errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
     },
     formTitle() {

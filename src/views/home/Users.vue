@@ -103,6 +103,7 @@
                           :error-messages="usernameErrors"
                           @input="$v.editedItem.username.$touch()"
                           @blur="$v.editedItem.username.$touch()"
+                          v-mask="'NNNNNNNNNNNNNNNNNNNNNNNNN'"
                           label="Nombre de Usuario"
                           type="text"
                         ></v-text-field>
@@ -126,6 +127,7 @@
                           :error-messages="passwordErrors"
                           @input="$v.editedItem.password.$touch()"
                           @blur="$v.editedItem.password.$touch()"
+                          v-mask="'NNNNNNNNNNNNNNNNNNNNNNNNN'"
                           label="Contraseña"
                           :type="eyeShow ? 'text' : 'password'"
                           @click:append="eyeShow = !eyeShow"
@@ -169,24 +171,21 @@
                         <v-text-field
                           solo
                           v-model="editedItem.phonenumber"
-                          :hide-details="hideDetails(phonenumberErrors.length)"
-                          :error-messages="phonenumberErrors"
-                          @input="$v.editedItem.phonenumber.$touch()"
-                          @blur="$v.editedItem.phonenumber.$touch()"
-                          label="Telefonos"
-                          type="text"
+                          hide-details
+                          v-mask="'(###) ###-####'"
+                          label="(999)-999-9999"
+                          type="tel"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="4" md="4" lg="4" xl="4">
-                        <label class="font-weight-bold" for="">Cedula </label>
+                        <label class="font-weight-bold" for="">Cedula</label>
+
                         <v-text-field
                           solo
                           v-model="editedItem.aid"
-                          :hide-details="hideDetails(aidErrors.length)"
-                          :error-messages="aidErrors"
-                          @input="$v.editedItem.aid.$touch()"
-                          @blur="$v.editedItem.aid.$touch()"
-                          label="Cedula"
+                          hide-details
+                          v-mask="'###-#######-#'"
+                          label="999-9999999-9"
                           type="text"
                         ></v-text-field>
                       </v-col>
@@ -406,6 +405,7 @@ export default {
       },
       password: {
         required,
+        minLength: minLength(6),
       },
       email: {
         required,
@@ -414,13 +414,7 @@ export default {
       fullname: {
         required,
         alpha,
-        maxLength: maxLength(25),
-      },
-      phonenumber: {
-        maxLength: maxLength(50),
-      },
-      aid: {
-        maxLength: maxLength(25),
+        maxLength: maxLength(30),
       },
     },
   },
@@ -457,7 +451,6 @@ export default {
       { text: "Nombre Completo", value: "fullname" },
       { text: "Telefono", value: "phonenumber" },
       { text: "Cedula", value: "aid" },
-      // { text: "Fecha", value: "createdDate" },
       { text: "Opciones", align: "end", value: "options", sortable: false },
     ],
     permissionGet: [],
@@ -473,7 +466,7 @@ export default {
       email: null,
       fullname: null,
       phonenumber: null,
-      aid: 0,
+      aid: null,
       claims: [],
     },
     defaultItem: {
@@ -482,7 +475,7 @@ export default {
       email: null,
       fullname: null,
       phonenumber: null,
-      aid: 0,
+      aid: null,
       claims: [],
     },
   }),
@@ -528,11 +521,21 @@ export default {
               text: "La sesion expiro, debe iniciar sesión otra vez.",
             });
           } else {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
+            err.response.status == 500
+              ? this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                })
+              : this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: err.response.data.message,
+                });
           }
         });
     },
@@ -551,11 +554,21 @@ export default {
               text: "La sesion expiro, debe iniciar sesión otra vez.",
             });
           } else {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
+            err.response.status == 500
+              ? this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                })
+              : this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: err.response.data.message,
+                });
           }
         });
     },
@@ -579,11 +592,21 @@ export default {
               text: "La sesion expiro, debe iniciar sesión otra vez.",
             });
           } else {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
+            err.response.status == 500
+              ? this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                })
+              : this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: err.response.data.message,
+                });
           }
         });
     },
@@ -607,11 +630,21 @@ export default {
                 text: "La sesion expiro, debe iniciar sesión otra vez.",
               });
             } else {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.message,
-              });
+              err.response.status == 500
+                ? this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                  })
+                : this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: err.response.data.message,
+                  });
             }
           });
       }
@@ -635,11 +668,21 @@ export default {
                 text: "La sesion expiro, debe iniciar sesión otra vez.",
               });
             } else {
-              this.$swal({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.message,
-              });
+              err.response.status == 500
+                ? this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                  })
+                : this.$swal({
+                    icon: "error",
+                    title: "Oops...",
+                    text: err.response.data.message,
+                  });
             }
           });
       }
@@ -661,11 +704,21 @@ export default {
               text: "La sesion expiro, debe iniciar sesión otra vez.",
             });
           } else {
-            this.$swal({
-              icon: "error",
-              title: "Oops...",
-              text: err.response.data.message,
-            });
+            err.response.status == 500
+              ? this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `
+                Error interno en el servidor,
+                Valor: ${err.response.data.message.value}. \n
+                path: ${err.response.data.message.path} \n
+                `,
+                })
+              : this.$swal({
+                  icon: "error",
+                  title: "Oops...",
+                  text: err.response.data.message,
+                });
           }
         });
     },
@@ -673,8 +726,10 @@ export default {
       return val <= 0 ? true : false;
     },
     save() {
-      if (this.editedIndex > -1) this.updateUsers(this.editedItem);
-      else this.createUsers(this.editedItem);
+      if (!this.$v.$invalid) {
+        if (this.editedIndex > -1) this.updateUsers(this.editedItem);
+        else this.createUsers(this.editedItem);
+      }
     },
     closeDelete() {
       this.tableLoading = false;
@@ -730,27 +785,12 @@ export default {
     },
   },
   computed: {
-    aidErrors() {
-      const errors = [];
-      if (!this.$v.editedItem.aid.$dirty) return errors;
-      !this.$v.editedItem.aid.maxLength &&
-        errors.push("El nombre solo permite 25 caracteres maximo.");
-      return errors;
-    },
-    phonenumberErrors() {
-      const errors = [];
-      if (!this.$v.editedItem.phonenumber.$dirty) return errors;
-      !this.$v.editedItem.phonenumber.maxLength &&
-        errors.push("El nombre solo permite 50 caracteres maximo.");
-      return errors;
-    },
     fullnameErrors() {
       const errors = [];
       if (!this.$v.editedItem.fullname.$dirty) return errors;
-      !this.$v.editedItem.fullname.required &&
-        errors.push("El nombre es requerido.");
+      !this.$v.editedItem.fullname.required && errors.push("Es requerido.");
       !this.$v.editedItem.fullname.maxLength &&
-        errors.push("El nombre solo permite 25 caracteres maximo.");
+        errors.push("Solo permite 30 caracteres maximo.");
       !this.$v.editedItem.fullname.alpha &&
         errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
@@ -758,30 +798,26 @@ export default {
     emailErrors() {
       const errors = [];
       if (!this.$v.editedItem.email.$dirty) return errors;
-      !this.$v.editedItem.email.required &&
-        errors.push("El nombre de usuario es requerido.");
-      !this.$v.editedItem.email.email &&
-        errors.push("El correo no es correcto.");
+      !this.$v.editedItem.email.required && errors.push("Es requerido.");
+      !this.$v.editedItem.email.email && errors.push("No es correcto.");
       return errors;
     },
     passwordErrors() {
       const errors = [];
       if (!this.$v.editedItem.password.$dirty) return errors;
-      !this.$v.editedItem.password.required &&
-        errors.push("La contraseña es requerido.");
+      !this.$v.editedItem.password.required && errors.push("Es requerido.");
+      !this.$v.editedItem.password.minLength &&
+        errors.push("Solo permite 6 caracteres como minimo.");
       return errors;
     },
     usernameErrors() {
       const errors = [];
       if (!this.$v.editedItem.username.$dirty) return errors;
-      !this.$v.editedItem.username.required &&
-        errors.push("El nombre de usuario es requerido.");
+      !this.$v.editedItem.username.required && errors.push("Es requerido.");
       !this.$v.editedItem.username.maxLength &&
-        errors.push("El nombre de usuario solo permite 25 caracteres maximo.");
+        errors.push("Solo permite 25 caracteres maximo.");
       !this.$v.editedItem.username.minLength &&
-        errors.push(
-          "El nombre de usuario solo permite 3 caracteres como minimo."
-        );
+        errors.push("Solo permite 3 caracteres como minimo.");
       !this.$v.editedItem.username.alpha &&
         errors.push("Solo es permitido a-z-A-Z-0-9.");
       return errors;
