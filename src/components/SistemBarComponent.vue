@@ -23,6 +23,7 @@
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
         <v-btn
+          v-if="!resetAndInstall"
           @click="update_downloaded"
           class="d-flex align-center pl-2 mx-1"
           small
@@ -36,6 +37,19 @@
           <v-icon :class="!updateFinish ? 'warning--text' : 'success--text'"
             >mdi-update</v-icon
           >
+        </v-btn>
+        <v-btn
+          v-else
+          @click="restartApp"
+          class="d-flex align-center pl-2 mx-1"
+          small
+          tile
+          icon
+          style="-webkit-app-region: no-drag"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon class="success--text">mdi-lock-reset</v-icon>
         </v-btn>
       </template>
       <span v-text="message"></span>
@@ -88,6 +102,7 @@ export default {
     versionApp: null,
     checkUpdate: false,
     updateFinish: false,
+    resetAndInstall: false,
   }),
   created() {
     this.update_available();
@@ -95,10 +110,11 @@ export default {
   },
   methods: {
     update_downloaded() {
+      this.updateFinish = true;
       window.ipcRenderer.on("update_downloaded", () => {
         this.checkUpdate = false;
-        this.updateFinish = true;
         this.message = "¿Reiniciar ahora? ";
+        this.resetAndInstall = true;
       });
     },
     update_available() {
