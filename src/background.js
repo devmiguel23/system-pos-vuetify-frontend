@@ -39,7 +39,7 @@ async function createWindow() {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html');
-    // autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.checkForUpdatesAndNotify();
   }
 
   ipcMain.on('MinimizeWindows', () => {
@@ -52,14 +52,6 @@ async function createWindow() {
 
   ipcMain.on('closeWindowsApp', () => {
     app.exit(0)
-  });
-  //update
-  ipcMain.on('restart_app', () => {
-    autoUpdater.quitAndInstall();
-  });
-
-  win.once('ready-to-show', () => {
-    autoUpdater.checkForUpdatesAndNotify();
   });
 
   autoUpdater.on('update-available', () => {
@@ -105,6 +97,11 @@ app.on('ready', async () => {
 //version
 ipcMain.on('app_version', (event) => {
   event.sender.send('app_version', { version: app.getVersion() });
+});
+
+// update
+ipcMain.on('restart_app', () => {
+  autoUpdater.quitAndInstall();
 });
 
 // Exit cleanly on request from parent process in development mode.

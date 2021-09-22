@@ -105,7 +105,6 @@ export default {
     resetAndInstall: false,
   }),
   created() {
-    this.update_available();
     this.version();
   },
   methods: {
