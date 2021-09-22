@@ -53,22 +53,22 @@ async function createWindow() {
   ipcMain.on('closeWindowsApp', () => {
     app.exit(0)
   });
+  //update
+  ipcMain.on('restart_app', () => {
+    autoUpdater.quitAndInstall();
+  });
 
-  // ipcMain.on('restart_app', () => {
-  //   autoUpdater.quitAndInstall();
-  // });
+  win.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
 
-  // win.once('ready-to-show', () => {
-  //   autoUpdater.checkForUpdatesAndNotify();
-  // });
+  autoUpdater.on('update-available', () => {
+    win.webContents.send('update_available');
+  });
 
-  // autoUpdater.on('update-available', () => {
-  //   win.webContents.send('update_available');
-  // });
-
-  // autoUpdater.on('update-downloaded', () => {
-  //   win.webContents.send('update_downloaded');
-  // });
+  autoUpdater.on('update-downloaded', () => {
+    win.webContents.send('update_downloaded');
+  });
 
 }
 

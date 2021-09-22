@@ -20,7 +20,7 @@
     </div>
     <v-spacer></v-spacer>
 
-    <!-- <v-tooltip bottom>
+    <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           @click="update_downloaded"
@@ -39,7 +39,7 @@
         </v-btn>
       </template>
       <span v-text="message"></span>
-    </v-tooltip> -->
+    </v-tooltip>
     <v-btn
       @click="minimizeWindows"
       class="d-flex align-center pl-2 mx-1"
@@ -84,32 +84,32 @@ export default {
     },
   },
   data: () => ({
-    // message: null,
+    message: null,
     versionApp: null,
-    // checkUpdate: false,
-    // updateFinish: false,
+    checkUpdate: false,
+    updateFinish: false,
   }),
   created() {
-    // this.update_available();
+    this.update_available();
     this.version();
   },
   methods: {
-    // update_downloaded() {
-    //   window.ipcRenderer.on("update_downloaded", () => {
-    //     this.checkUpdate = false;
-    //     this.updateFinish = true;
-    //     this.message = "¿Reiniciar ahora? ";
-    //   });
-    // },
-    // update_available() {
-    //   window.ipcRenderer.on("update_available", () => {
-    //     this.checkUpdate = true;
-    //     this.message = "Actualizar App";
-    //   });
-    // },
-    // restartApp() {
-    //   window.ipcRenderer.send("restart_app");
-    // },
+    update_downloaded() {
+      window.ipcRenderer.on("update_downloaded", () => {
+        this.checkUpdate = false;
+        this.updateFinish = true;
+        this.message = "¿Reiniciar ahora? ";
+      });
+    },
+    update_available() {
+      window.ipcRenderer.on("update_available", () => {
+        this.checkUpdate = true;
+        this.message = "Actualizar App";
+      });
+    },
+    restartApp() {
+      window.ipcRenderer.send("restart_app");
+    },
     version() {
       window.ipcRenderer.send("app_version");
       window.ipcRenderer.on("app_version", (event, arg) => {
