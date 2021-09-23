@@ -12,7 +12,6 @@ import VueMask from 'v-mask'
 
 Vue.config.productionTip = false
 
-// axios.defaults.baseURL = process.env.VUE_APP_URL_BASE
 axios.defaults.baseURL = process.env.VUE_APP_URL_BASE
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('Authorization');
 

@@ -6,6 +6,7 @@
         <router-view />
       </v-flex>
     </v-layout>
+    <footer-component title="Auto Repuestos" />
   </v-container>
 </template>
 <script>
@@ -13,6 +14,7 @@ export default {
   name: "Auth",
   components: {
     VSistemBar: () => import("@/components/SistemBarComponent.vue"),
+    FooterComponent: () => import("@/components/FooterComponent.vue"),
   },
 };
 </script>

@@ -13,47 +13,8 @@
         class="mx-2 grey--text text--lighten-2 font-weight-normal"
         v-text="title"
       ></div>
-      <div
-        class="mx-2 grey--text text--lighten-2 font-weight-normal"
-        v-text="versionApp"
-      ></div>
     </div>
     <v-spacer></v-spacer>
-
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          v-if="!resetAndInstall"
-          @click="update_downloaded"
-          class="d-flex align-center pl-2 mx-1"
-          small
-          tile
-          icon
-          style="-webkit-app-region: no-drag"
-          :disabled="!checkUpdate"
-          v-bind="attrs"
-          v-on="on"
-        >
-          <v-icon :class="!updateFinish ? 'warning--text' : 'success--text'"
-            >mdi-update</v-icon
-          >
-        </v-btn>
-        <v-btn
-          v-else
-          @click="restartApp"
-          class="d-flex align-center pl-2 mx-1"
-          small
-          tile
-          icon
-          style="-webkit-app-region: no-drag"
-          v-bind="attrs"
-          v-on="on"
-        >
-          <v-icon class="success--text">mdi-lock-reset</v-icon>
-        </v-btn>
-      </template>
-      <span v-text="message"></span>
-    </v-tooltip>
     <v-btn
       @click="minimizeWindows"
       class="d-flex align-center pl-2 mx-1"
@@ -88,7 +49,6 @@
 </template>
 <script>
 import { ipcRenderer } from "electron";
-window.ipcRenderer = ipcRenderer;
 export default {
   name: "Sistem-Bar",
   props: {
@@ -97,45 +57,17 @@ export default {
       required: true,
     },
   },
+
   data: () => ({
-    message: null,
-    versionApp: null,
-    checkUpdate: false,
-    updateFinish: false,
-    resetAndInstall: false,
+    //
   }),
-  created() {
-    this.version();
-  },
+
   methods: {
-    update_downloaded() {
-      this.updateFinish = true;
-      window.ipcRenderer.on("update_downloaded", () => {
-        this.checkUpdate = false;
-        this.message = "¿Reiniciar ahora? ";
-        this.resetAndInstall = true;
-      });
-    },
-    update_available() {
-      window.ipcRenderer.on("update_available", () => {
-        this.checkUpdate = true;
-        this.message = "Actualizar App";
-      });
-    },
-    restartApp() {
-      window.ipcRenderer.send("restart_app");
-    },
-    version() {
-      window.ipcRenderer.send("app_version");
-      window.ipcRenderer.on("app_version", (event, arg) => {
-        this.versionApp = `Version ${arg.version} alpha`;
-      });
-    },
     minimizeWindows() {
-      window.ipcRenderer.send("MinimizeWindows");
+      ipcRenderer.send("MinimizeWindows");
     },
     maximizeWindows() {
-      window.ipcRenderer.send("MaximizeWindows");
+      ipcRenderer.send("MaximizeWindows");
     },
     closeWindowsApp() {
       this.$swal
@@ -147,9 +79,10 @@ export default {
         })
         .then((result) => {
           if (result.isConfirmed) {
-            localStorage.removeItem("Authorization");
+            // localStorage.removeItem("Authorization");
+            localStorage.clear();
             setTimeout(() => {
-              window.ipcRenderer.send("closeWindowsApp");
+              ipcRenderer.send("closeWindowsApp");
             }, 500);
           }
         });

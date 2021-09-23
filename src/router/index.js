@@ -110,6 +110,7 @@ const router = new VueRouter({
   routes,
 });
 router.beforeEach(async (to, from, next) => {
+
   if (to.meta.title) window.document.title = to.meta && to.meta.title ? `AUTO REPUESTOS - ${to.meta.title}` : "AUTO REPUESTOS";
   if (to.meta.requiresAuth) {
     axios.get("/")

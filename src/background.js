@@ -3,14 +3,33 @@
 import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
-import { autoUpdater } from "electron-updater"
 import path from "path";
+import { autoUpdater } from "electron-updater"
+import log from "electron-log";
+
+//
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+log.transports.file.level = "info"
+autoUpdater.logger = log
+log.info('App starting...');
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
+
+function formatBytes(bytes, decimals = 1) {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
 
 async function createWindow() {
   // Create the browser window.
@@ -22,7 +41,6 @@ async function createWindow() {
     minWidth: 800,
     minHeight: 600,
     icon: path.join(__dirname, '../public/favicon.ico'),
-    // icon: __dirname + '/favicon.ico',
     titleBarStyle: 'hiddenInset',
     frame: false,
     webPreferences: {
@@ -38,13 +56,53 @@ async function createWindow() {
   } else {
     createProtocol('app')
     // Load the index.html when not in development
+    // win.webContents.openDevTools()
     win.loadURL('app://./index.html');
-    autoUpdater.checkForUpdatesAndNotify();
   }
 
+  // 
+  // auto update 
+  // 
+  function sendStatusToWindow(text) {
+    log.info(text);
+    win.webContents.send('message', text);
+  }
+  autoUpdater.on('checking-for-update', () => {
+    sendStatusToWindow("Revisando actualizaciones..");
+  });
+
+  autoUpdater.on('update-available', () => {
+    sendStatusToWindow("Actualizacion disponible.");
+  });
+
+  autoUpdater.on('error', (err) => {
+    sendStatusToWindow(`Hubo un error en la actualizacion: ${err}`);
+  });
+
+  autoUpdater.on('download-progress', progressObj => {
+    let log_message = `Velicidad: ${formatBytes(progressObj.bytesPerSecond)} - Descargada ${parseInt(progressObj.percent)}%`;
+    // (' + progressObj.transferred + "/" + progressObj.total + ')';
+    sendStatusToWindow(log_message);
+  });
+
+  autoUpdater.on('update-not-available', () => {
+    sendStatusToWindow('Aplicacion Actualizada.');
+  });
+
+  autoUpdater.on('update-downloaded', () => {
+    sendStatusToWindow('Descarga finalizada. El programa se cerrara en 5 seg.');
+    setTimeout(() => {
+      autoUpdater.quitAndInstall();
+    }, 5000);
+  });
+
+  // 
+
+  //windows 
   ipcMain.on('MinimizeWindows', () => {
     win.minimize();
   });
+
   ipcMain.on('MaximizeWindows', () => {
     if (win.isMaximized()) return win.restore();
     else return win.maximize();
@@ -54,12 +112,9 @@ async function createWindow() {
     app.exit(0)
   });
 
-  autoUpdater.on('update-available', () => {
-    win.webContents.send('update_available');
-  });
-
-  autoUpdater.on('update-downloaded', () => {
-    win.webContents.send('update_downloaded');
+  //version
+  ipcMain.on('app_version', (event) => {
+    event.sender.send('app_version', { version: app.getVersion() });
   });
 
 }
@@ -83,6 +138,7 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  autoUpdater.checkForUpdatesAndNotify();
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
@@ -94,15 +150,6 @@ app.on('ready', async () => {
   createWindow()
 })
 
-//version
-ipcMain.on('app_version', (event) => {
-  event.sender.send('app_version', { version: app.getVersion() });
-});
-
-// update
-ipcMain.on('restart_app', () => {
-  autoUpdater.quitAndInstall();
-});
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

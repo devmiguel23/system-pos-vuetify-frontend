@@ -108,7 +108,6 @@ export default {
         await this.axios
           .post("/signin", this.form)
           .then((res) => {
-            console.log(res.data.user);
             localStorage.setItem("Authorization", res.data.token);
             localStorage.setItem("User", JSON.stringify(res.data.user));
             this.axios.defaults.headers.common["Authorization"] =

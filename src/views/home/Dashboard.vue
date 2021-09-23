@@ -2,7 +2,7 @@
   <v-container class="ma-0 pa-0" fluid>
     <v-sistem-bar title="Auto Repuestos" />
     <v-navigation-drawer :mini-variant="mini" permanent app>
-      <v-list-item class="px-2">
+      <v-list-item class="px-2" v-if="user">
         <v-list-item-avatar rounded size="40" elevation="5">
           <v-avatar
             color="tertiary  white--text"
@@ -122,6 +122,7 @@
         <router-view />
       </v-container>
     </v-main>
+    <footer-component title="Auto Repuestos" />
     <v-btn
       small
       v-scroll="onScroll"
@@ -142,6 +143,7 @@ export default {
   name: "Dashboard",
   components: {
     VSistemBar: () => import("@/components/SistemBarComponent.vue"),
+    FooterComponent: () => import("@/components/FooterComponent.vue"),
   },
   data: () => ({
     mini: false,

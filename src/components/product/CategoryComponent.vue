@@ -22,8 +22,8 @@
       </v-tooltip>
     </template>
     <v-card>
-      <v-toolbar dark color="primary">
-        <v-btn icon dark @click="closeCategory">
+      <v-toolbar dark color="primary" dense>
+        <v-btn icon dark @click="closeCategory" small>
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-spacer></v-spacer>
@@ -53,7 +53,7 @@
             dense
           >
             <template v-slot:top>
-              <v-toolbar flat>
+              <v-toolbar flat dense>
                 <v-toolbar-title>Categorias </v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
@@ -95,8 +95,8 @@
                     </div>
                   </template>
                   <v-card>
-                    <v-toolbar dark color="primary">
-                      <v-btn icon dark @click="close">
+                    <v-toolbar dark color="primary" dense>
+                      <v-btn icon dark @click="close" small>
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
                       <v-toolbar-title v-text="formTitle"></v-toolbar-title>
@@ -108,6 +108,7 @@
                           dark
                           text
                           @click="save"
+                          small
                         >
                           Guardar
                         </v-btn>
@@ -166,8 +167,8 @@
                   max-width="600px"
                 >
                   <v-card>
-                    <v-toolbar dark color="primary">
-                      <v-btn icon dark @click="closeDelete">
+                    <v-toolbar dark color="primary" dense>
+                      <v-btn icon dark @click="closeDelete" small>
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
                       <v-toolbar-title
@@ -181,6 +182,7 @@
                           text
                           :loading="btnDLoading"
                           @click="deleteItemConfirm"
+                          small
                         >
                           Guardar
                         </v-btn>
