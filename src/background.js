@@ -80,7 +80,7 @@ async function createWindow() {
   });
 
   autoUpdater.on('download-progress', progressObj => {
-    let log_message = `Velicidad: ${formatBytes(progressObj.bytesPerSecond)} - Descargada ${parseInt(progressObj.percent)}%`;
+    let log_message = `Velicidad: ${formatBytes(progressObj.bytesPerSecond)} - Descargando ${parseInt(progressObj.percent)}%`;
     // (' + progressObj.transferred + "/" + progressObj.total + ')';
     sendStatusToWindow(log_message);
   });
